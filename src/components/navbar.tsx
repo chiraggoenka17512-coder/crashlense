@@ -5,12 +5,13 @@ import Link from "next/link";
 import { Sparkles, Terminal, Key } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
-export function Navbar() {
-  const isClerkReady =
-    typeof window !== "undefined"
-      ? Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.startsWith("pk_"))
-      : false;
+const hasClerk = Boolean(
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+  (process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.startsWith("pk_test_") ||
+   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.startsWith("pk_live_"))
+);
 
+export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/[0.08] bg-[#090a0f]/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -48,7 +49,7 @@ export function Navbar() {
         {/* Right CTA / Auth Buttons */}
         <div className="flex items-center gap-3">
           {/* Clerk Auth Integration */}
-          {process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ? (
+          {hasClerk ? (
             <div className="flex items-center gap-2">
               <SignedIn>
                 <UserButton />
