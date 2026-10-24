@@ -24,6 +24,12 @@ export interface StackLayer {
   tech: string;
   telemetry: string;
   metric: string;
+  bigTitle1: string;
+  bigTitle2: string;
+  bigTech1: string;
+  bigTech2: string;
+  implementationDetail: string;
+  highlights: string[];
 }
 
 export const STACK_LAYERS: StackLayer[] = [
@@ -31,73 +37,109 @@ export const STACK_LAYERS: StackLayer[] = [
     id: 1,
     name: "Front OLED Interface",
     badge: "LAYER 01 // UI ENGINE",
-    caption: "Fluid, responsive problem solver HUD running at 60fps.",
+    caption: "Fluid, responsive problem solver HUD running at 60fps with integrated Dynamic Island signals.",
     color: "#ffedd6",
     accentBorder: "border-[#ffedd6]",
     accentBg: "bg-[#ffedd6]/10",
     tech: "Next.js 16 + React 19",
     telemetry: "60 FPS VECTOR HUD",
     metric: "12MS P99",
+    bigTitle1: "FRONT OLED",
+    bigTitle2: "INTERFACE",
+    bigTech1: "NEXT.JS 16",
+    bigTech2: "+ REACT 19",
+    implementationDetail: "Client-side vector HUD compiled via Turbopack with React 19 concurrent transitions and zero-hydration jank.",
+    highlights: ["60 FPS VECTOR HUD", "DYNAMIC ISLAND READY", "ZERO-JANK TRANSITIONS"],
   },
   {
     id: 2,
     name: "3D Spatial Graphics",
-    badge: "LAYER 02 // GRAPHICS",
-    caption: "Real-time WebGL CAD wireframes with hardware acceleration.",
+    badge: "LAYER 02 // GRAPHICS ENGINE",
+    caption: "Real-time WebGL CAD wireframes with physical PBR lighting and 120 FPS camera crane physics.",
     color: "#38bdf8",
     accentBorder: "border-[#38bdf8]",
     accentBg: "bg-[#38bdf8]/10",
     tech: "Three.js + Draco GLTF",
     telemetry: "DRACO DECOMPRESSOR",
     metric: "60 FPS PBR",
+    bigTitle1: "3D SPATIAL",
+    bigTitle2: "GRAPHICS",
+    bigTech1: "THREE.JS",
+    bigTech2: "+ DRACO GLTF",
+    implementationDetail: "Hardware-accelerated Three.js canvas executing 8:1 Draco geometric decompression on modern WebGL2 contexts.",
+    highlights: ["DRACO 8:1 COMPRESSION", "PBR CAD WIREFRAME", "HARDWARE ACCELERATED"],
   },
   {
     id: 3,
     name: "Edge Security Shield",
-    badge: "LAYER 03 // AUTH",
-    caption: "Instant biometric edge perimeter with zero session friction.",
+    badge: "LAYER 03 // SECURITY SHIELD",
+    caption: "Instant biometric edge perimeter with cryptographic JWT token verification and zero wait.",
     color: "#a855f7",
     accentBorder: "border-[#a855f7]",
     accentBg: "bg-[#a855f7]/10",
     tech: "Clerk Edge Auth + TLS 1.3",
     telemetry: "JWT CLAIMS SYNC",
     metric: "ZERO-WAIT",
+    bigTitle1: "EDGE SECURITY",
+    bigTitle2: "SHIELD",
+    bigTech1: "CLERK EDGE",
+    bigTech2: "AUTH + TLS 1.3",
+    implementationDetail: "Sub-millisecond V8 edge middleware intercepting requests with cryptographic token claims and session defense.",
+    highlights: ["ZERO-WAIT SESSIONS", "JWT CLAIMS SYNC", "BIOMETRIC PERIMETER"],
   },
   {
     id: 4,
     name: "Polymorphic Data Engine",
-    badge: "LAYER 04 // DATABASE",
-    caption: "Sunday track problem schemas executing sub-12ms queries.",
+    badge: "LAYER 04 // DATA ENGINE",
+    caption: "Sunday track problem schemas executing sub-12ms prepared queries with zero migration drift.",
     color: "#10b981",
     accentBorder: "border-[#10b981]",
     accentBg: "bg-[#10b981]/10",
     tech: "Drizzle ORM + Supabase",
     telemetry: "AWS POOLER 6543",
     metric: "P99 < 12MS",
+    bigTitle1: "POLYMORPHIC",
+    bigTitle2: "DATA ENGINE",
+    bigTech1: "DRIZZLE ORM",
+    bigTech2: "+ SUPABASE POOLER",
+    implementationDetail: "Type-safe relational schema mapped directly to Supabase PostgreSQL over low-overhead AWS pooling on port 6543.",
+    highlights: ["SUB-12MS P99", "TYPE-SAFE DRIZZLE", "AWS POOLER 6543"],
   },
   {
     id: 5,
     name: "Global Memory Cache",
-    badge: "LAYER 05 // CACHE",
-    caption: "16-node distributed cluster with sub-millisecond lookups.",
+    badge: "LAYER 05 // MEMORY CACHE",
+    caption: "16-node distributed cluster executing sub-millisecond telemetry cache and rate limiting.",
     color: "#f59e0b",
     accentBorder: "border-[#f59e0b]",
     accentBg: "bg-[#f59e0b]/10",
     tech: "Upstash Redis Cluster",
     telemetry: "16 SYNCED NODES",
     metric: "10K REQ/SEC",
+    bigTitle1: "GLOBAL MEMORY",
+    bigTitle2: "CACHE",
+    bigTech1: "UPSTASH REDIS",
+    bigTech2: "16-NODE CLUSTER",
+    implementationDetail: "Serverless REST cache pipeline delivering 10,000 req/sec with automated global edge replication and telemetry ping.",
+    highlights: ["10K REQ/SEC", "16 SYNCED NODES", "SUB-MS TELEMETRY"],
   },
   {
     id: 6,
     name: "Titanium Chassis Frame",
-    badge: "LAYER 06 // CHASSIS",
-    caption: "Grade-5 titanium unibody engineered for on-device compute.",
+    badge: "LAYER 06 // CHASSIS FRAME",
+    caption: "Aerospace Grade-5 titanium unibody engineered for sustained on-device compute thermal dissipation.",
     color: "#ff8539",
     accentBorder: "border-[#ff8539]",
     accentBg: "bg-[#ff8539]/10",
     tech: "Apple Grade-5 Titanium",
     telemetry: "CNC MILLED A3106",
     metric: "Δt = 0.85MM",
+    bigTitle1: "TITANIUM CHASSIS",
+    bigTitle2: "FRAME",
+    bigTech1: "APPLE GRADE-5",
+    bigTech2: "TITANIUM UNIBODY",
+    implementationDetail: "Precision CNC-machined titanium enclosure with triple sapphire camera island plateau and 0.85mm thermal tolerances.",
+    highlights: ["GRADE-5 TITANIUM", "CNC MILLED A3106", "Δt = 0.85MM TOLERANCE"],
   },
 ];
 
@@ -156,10 +198,12 @@ export function ExplodedChoreographyLayers({
         }}
         onMouseEnter={() => onHoverLayer(6)}
         onMouseLeave={() => onHoverLayer(null)}
-        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2.5px] bg-gradient-to-b from-[#404352] via-[#22242d] to-[#121319] shadow-[0_25px_50px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.4)] transition-all duration-200 cursor-pointer ${
+        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2.5px] bg-gradient-to-b from-[#404352] via-[#22242d] to-[#121319] shadow-[0_25px_50px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.4)] transition-all duration-300 cursor-pointer ${
           activeLayerId === 6
-            ? "ring-2 ring-[#ff8539] shadow-[0_0_35px_rgba(255,133,57,0.4)]"
-            : ""
+            ? "ring-2 ring-[#ff8539] shadow-[0_0_40px_rgba(255,133,57,0.45)] scale-[1.02] opacity-100 z-10"
+            : activeLayerId !== null
+            ? "opacity-40 brightness-75 hover:opacity-100 hover:brightness-100"
+            : "opacity-100"
         }`}
       >
         <div className="relative w-full h-full rounded-[41px] sm:rounded-[45px] lg:rounded-[49px] bg-[#101217] p-5 flex flex-col justify-between overflow-hidden border border-white/[0.08]">
@@ -217,10 +261,12 @@ export function ExplodedChoreographyLayers({
         }}
         onMouseEnter={() => onHoverLayer(5)}
         onMouseLeave={() => onHoverLayer(null)}
-        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2px] bg-gradient-to-br from-amber-500/50 via-amber-900/30 to-black/80 backdrop-blur-md transition-all duration-200 cursor-pointer ${
+        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2px] bg-gradient-to-br from-amber-500/50 via-amber-900/30 to-black/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
           activeLayerId === 5
-            ? "ring-2 ring-[#f59e0b] shadow-[0_0_35px_rgba(245,158,11,0.5)]"
-            : ""
+            ? "ring-2 ring-[#f59e0b] shadow-[0_0_40px_rgba(245,158,11,0.5)] scale-[1.02] opacity-100 z-10"
+            : activeLayerId !== null
+            ? "opacity-40 brightness-75 hover:opacity-100 hover:brightness-100"
+            : "opacity-100"
         }`}
       >
         <div className="relative w-full h-full rounded-[41px] sm:rounded-[45px] lg:rounded-[49px] bg-[#17120c]/90 p-4 sm:p-5 flex flex-col justify-between border border-amber-500/30">
@@ -274,10 +320,12 @@ export function ExplodedChoreographyLayers({
         }}
         onMouseEnter={() => onHoverLayer(4)}
         onMouseLeave={() => onHoverLayer(null)}
-        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2px] bg-gradient-to-br from-emerald-500/50 via-emerald-950/40 to-black/80 backdrop-blur-md transition-all duration-200 cursor-pointer ${
+        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2px] bg-gradient-to-br from-emerald-500/50 via-emerald-950/40 to-black/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
           activeLayerId === 4
-            ? "ring-2 ring-[#10b981] shadow-[0_0_35px_rgba(16,185,129,0.5)]"
-            : ""
+            ? "ring-2 ring-[#10b981] shadow-[0_0_40px_rgba(16,185,129,0.5)] scale-[1.02] opacity-100 z-10"
+            : activeLayerId !== null
+            ? "opacity-40 brightness-75 hover:opacity-100 hover:brightness-100"
+            : "opacity-100"
         }`}
       >
         <div className="relative w-full h-full rounded-[41px] sm:rounded-[45px] lg:rounded-[49px] bg-[#0b1713]/90 p-4 sm:p-5 flex flex-col justify-between border border-emerald-500/30">
@@ -326,10 +374,12 @@ export function ExplodedChoreographyLayers({
         }}
         onMouseEnter={() => onHoverLayer(3)}
         onMouseLeave={() => onHoverLayer(null)}
-        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2px] bg-gradient-to-br from-purple-500/50 via-purple-950/40 to-black/80 backdrop-blur-md transition-all duration-200 cursor-pointer ${
+        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2px] bg-gradient-to-br from-purple-500/50 via-purple-950/40 to-black/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
           activeLayerId === 3
-            ? "ring-2 ring-[#a855f7] shadow-[0_0_35px_rgba(168,85,247,0.5)]"
-            : ""
+            ? "ring-2 ring-[#a855f7] shadow-[0_0_40px_rgba(168,85,247,0.5)] scale-[1.02] opacity-100 z-10"
+            : activeLayerId !== null
+            ? "opacity-40 brightness-75 hover:opacity-100 hover:brightness-100"
+            : "opacity-100"
         }`}
       >
         <div className="relative w-full h-full rounded-[41px] sm:rounded-[45px] lg:rounded-[49px] bg-[#130f21]/90 p-4 sm:p-5 flex flex-col justify-between border border-purple-500/30">
@@ -376,10 +426,12 @@ export function ExplodedChoreographyLayers({
         }}
         onMouseEnter={() => onHoverLayer(2)}
         onMouseLeave={() => onHoverLayer(null)}
-        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2px] bg-gradient-to-br from-sky-400/50 via-sky-950/40 to-black/80 backdrop-blur-md transition-all duration-200 cursor-pointer ${
+        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2px] bg-gradient-to-br from-sky-400/50 via-sky-950/40 to-black/80 backdrop-blur-md transition-all duration-300 cursor-pointer ${
           activeLayerId === 2
-            ? "ring-2 ring-[#38bdf8] shadow-[0_0_35px_rgba(56,189,248,0.5)]"
-            : ""
+            ? "ring-2 ring-[#38bdf8] shadow-[0_0_40px_rgba(56,189,248,0.5)] scale-[1.02] opacity-100 z-10"
+            : activeLayerId !== null
+            ? "opacity-40 brightness-75 hover:opacity-100 hover:brightness-100"
+            : "opacity-100"
         }`}
       >
         <div className="relative w-full h-full rounded-[41px] sm:rounded-[45px] lg:rounded-[49px] bg-[#0c1624]/90 p-4 sm:p-5 flex flex-col justify-between border border-sky-400/30">
@@ -432,10 +484,12 @@ export function ExplodedChoreographyLayers({
         }}
         onMouseEnter={() => onHoverLayer(1)}
         onMouseLeave={() => onHoverLayer(null)}
-        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2.5px] bg-gradient-to-b from-[#3d404d] via-[#22242d] to-[#14151a] shadow-[0_28px_65px_rgba(0,0,0,0.92),0_0_0_1px_rgba(255,255,255,0.14),inset_0_1px_1px_rgba(255,255,255,0.35)] transition-all duration-200 cursor-pointer ${
+        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2.5px] bg-gradient-to-b from-[#3d404d] via-[#22242d] to-[#14151a] shadow-[0_28px_65px_rgba(0,0,0,0.92),0_0_0_1px_rgba(255,255,255,0.14),inset_0_1px_1px_rgba(255,255,255,0.35)] transition-all duration-300 cursor-pointer ${
           activeLayerId === 1
-            ? "ring-2 ring-[#ffedd6] shadow-[0_0_35px_rgba(255,237,214,0.5)]"
-            : ""
+            ? "ring-2 ring-[#ffedd6] shadow-[0_0_40px_rgba(255,237,214,0.5)] scale-[1.02] opacity-100 z-10"
+            : activeLayerId !== null
+            ? "opacity-40 brightness-75 hover:opacity-100 hover:brightness-100"
+            : "opacity-100"
         }`}
         onClick={onOpenPlayground}
       >

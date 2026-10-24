@@ -7,6 +7,8 @@ import {
   useScroll,
   useTransform,
   useSpring,
+  useMotionValueEvent,
+  AnimatePresence,
 } from "motion/react";
 import { CuttingMat } from "@/components/oryzo/CuttingMat";
 import {
@@ -34,8 +36,11 @@ export function HeroToDeviceChoreography({
   const [penHovered, setPenHovered] = useState(false);
   const [pencilHovered, setPencilHovered] = useState(false);
   const [clipsHovered, setClipsHovered] = useState(false);
-  const [activeLayerId, setActiveLayerId] = useState<number | null>(null);
-  const [mobileExplodedTab, setMobileExplodedTab] = useState<"what" | "how">("what");
+  const [selectedLayerId, setSelectedLayerId] = useState<number>(1);
+  const [hoveredLayerId, setHoveredLayerId] = useState<number | null>(null);
+  const activeLayerId = hoveredLayerId ?? selectedLayerId;
+  const currentLayer =
+    STACK_LAYERS.find((l) => l.id === activeLayerId) || STACK_LAYERS[0];
 
   // Mouse parallax for subtle studio depth
   const mouseX = useSpring(0, { stiffness: 45, damping: 25 });
@@ -91,6 +96,24 @@ export function HeroToDeviceChoreography({
     damping: 26,
     mass: 0.32,
     restDelta: 0.0001,
+  });
+
+  // Scroll-driven active layer synchronization across Frame 4 exploded stage [0.54 ➔ 0.94]
+  useMotionValueEvent(smoothProgress, "change", (progress) => {
+    if (hoveredLayerId !== null) return;
+    if (progress >= 0.54 && progress < 0.60) {
+      setSelectedLayerId(1);
+    } else if (progress >= 0.60 && progress < 0.66) {
+      setSelectedLayerId(2);
+    } else if (progress >= 0.66 && progress < 0.72) {
+      setSelectedLayerId(3);
+    } else if (progress >= 0.72 && progress < 0.78) {
+      setSelectedLayerId(4);
+    } else if (progress >= 0.78 && progress < 0.84) {
+      setSelectedLayerId(5);
+    } else if (progress >= 0.84 && progress <= 0.94) {
+      setSelectedLayerId(6);
+    }
   });
 
   // =========================================================================
@@ -643,7 +666,7 @@ export function HeroToDeviceChoreography({
             <ExplodedChoreographyLayers
               explosionProgress={explosionProgress}
               activeLayerId={activeLayerId}
-              onHoverLayer={setActiveLayerId}
+              onHoverLayer={setHoveredLayerId}
               onOpenPlayground={onTryItNow}
               className="pointer-events-auto"
             />
@@ -748,137 +771,183 @@ export function HeroToDeviceChoreography({
         {/* Top Caliper HUD for Frame 4 (Desktop only) */}
         <motion.div
           style={{ opacity: frame4HudOpacity }}
-          className="absolute top-20 sm:top-22 left-0 right-0 z-20 px-6 sm:px-12 pointer-events-none hidden md:flex items-center justify-between"
+          className="absolute top-20 sm:top-22 left-0 right-0 z-30 px-6 sm:px-12 pointer-events-auto hidden md:flex items-center justify-between"
         >
           <div className="flex items-center gap-2 font-mono text-[10px] text-[#ff8539]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#ff8539] animate-pulse" />
-            <span>STAGE 02 // 6-LAYER ARCHITECTURE EXPLODED</span>
+            <span>STAGE 02 // ARCHITECTURE DECONSTRUCTED</span>
           </div>
+
+          {/* Interactive 6-Layer Stepper */}
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#0d0f16]/90 border border-white/10 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.8)]">
+            {STACK_LAYERS.map((layer) => {
+              const isSelected = currentLayer.id === layer.id;
+              return (
+                <button
+                  key={layer.id}
+                  onClick={() => {
+                    playTactileClick(1200, 0.03);
+                    setSelectedLayerId(layer.id);
+                  }}
+                  onMouseEnter={() => setHoveredLayerId(layer.id)}
+                  onMouseLeave={() => setHoveredLayerId(null)}
+                  className={`px-3 py-1 rounded-xl font-mono text-[10px] font-bold uppercase transition-all flex items-center gap-1.5 cursor-pointer ${
+                    isSelected
+                      ? "bg-[#ffedd6] text-[#07080a] shadow-md scale-105"
+                      : "text-[#94a3b8] hover:text-[#ffedd6] hover:bg-white/5"
+                  }`}
+                >
+                  <span>0{layer.id}</span>
+                  <span className="hidden xl:inline">{layer.name.split(" ")[0]}</span>
+                </button>
+              );
+            })}
+          </div>
+
           <div className="font-mono text-[10px] text-[#ffedd6]/70">
-            [ HOVER ANY LAYER OR CARD TO INSPECT ]
+            [ SCROLL OR CLICK TO INSPECT EACH LAYER ]
           </div>
         </motion.div>
 
-        {/* FRAME 4 - LEFT FLANK: "WHAT IT IS" (MATCHING USER NOTEBOOK SKETCH) */}
+        {/* FRAME 4 - LEFT FLANK: "WHAT IT IS" (ONE LAYER AT A TIME IN BIG LETTERS) */}
         <motion.div
           style={{ opacity: whatItIsOpacity, x: whatItIsX }}
-          className="absolute left-6 sm:left-8 md:left-10 lg:left-14 xl:left-20 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-start max-w-[240px] lg:max-w-[280px] xl:max-w-[310px] pointer-events-auto select-none"
+          className="absolute left-6 sm:left-8 md:left-10 lg:left-14 xl:left-20 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-start max-w-[320px] lg:max-w-[390px] xl:max-w-[440px] pointer-events-auto select-none"
         >
           {/* Eyebrow Pill */}
-          <div className="flex items-center gap-2 mb-1.5 font-mono text-[9px] sm:text-[10px] text-[#ff8539] uppercase tracking-[0.2em]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#ff8539] animate-pulse" />
-            <span>ARCHITECTURE // DECONSTRUCTED</span>
+          <div className="flex items-center gap-2 mb-2 font-mono text-[9.5px] sm:text-[10.5px] uppercase tracking-[0.2em]">
+            <span
+              className="w-2 h-2 rounded-full animate-pulse"
+              style={{ backgroundColor: currentLayer.color }}
+            />
+            <span style={{ color: currentLayer.color }}>
+              {currentLayer.badge}
+            </span>
           </div>
 
-          {/* Display Title: WHAT IT IS */}
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-[family-name:var(--font-display)] font-extrabold tracking-[-0.03em] text-[#ffedd6] leading-[0.95] uppercase">
-            WHAT IT IS
-          </h3>
+          {/* Section Marker */}
+          <div className="flex items-center gap-2 mb-1.5 font-mono text-[10px] text-[#ffedd6]/50 uppercase tracking-widest">
+            <span>WHAT IT IS</span>
+            <span>&middot;</span>
+            <span className="text-[#ffedd6] font-bold">
+              [ 0{currentLayer.id} / 06 ]
+            </span>
+          </div>
 
-          <p className="font-mono text-[9.5px] sm:text-[10px] text-[#ff8539] font-bold tracking-wider uppercase mt-1">
-            6 FLOATING PHYSICAL SLICES
-          </p>
+          {/* BIG DISPLAY LETTERS: The Layer Name */}
+          <div className="relative w-full">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentLayer.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-[family-name:var(--font-display)] font-black tracking-[-0.04em] text-[#ffedd6] leading-[0.92] uppercase min-h-[1.9em]">
+                  {currentLayer.bigTitle1}
+                  <br />
+                  <span
+                    style={{ color: currentLayer.color }}
+                    className="drop-shadow-[0_0_30px_rgba(255,237,214,0.3)]"
+                  >
+                    {currentLayer.bigTitle2}
+                  </span>
+                </h2>
 
-          {/* Caliper Hairline Divider */}
-          <div className="w-20 h-[1px] bg-gradient-to-r from-[#ff8539] via-[rgba(255,237,214,0.2)] to-transparent my-2.5" />
-
-          {/* 6 Layer Descriptions (Hoverable & Synced) */}
-          <div className="space-y-1.5 w-full">
-            {STACK_LAYERS.map((layer) => {
-              const isSelected = activeLayerId === layer.id;
-              return (
+                {/* Caliper Hairline Divider */}
                 <div
-                  key={layer.id}
-                  onMouseEnter={() => {
-                    playTactileClick(1200, 0.02);
-                    setActiveLayerId(layer.id);
+                  className="w-24 h-[2px] my-3.5"
+                  style={{
+                    background: `linear-gradient(to right, ${currentLayer.color}, transparent)`,
                   }}
-                  onMouseLeave={() => setActiveLayerId(null)}
-                  className={`p-2 rounded-xl transition-all cursor-pointer border ${
-                    isSelected
-                      ? "bg-[#141724]/95 border-[#ff8539] shadow-[0_0_22px_rgba(255,133,57,0.3)] translate-x-1.5"
-                      : "bg-[#0d0f16]/65 border-white/[0.06] hover:border-white/20"
-                  }`}
-                >
-                  <div className="flex items-center justify-between text-[9px] font-mono">
+                />
+
+                {/* Plain-Language Description in large readable typography */}
+                <p className="font-sans text-xs sm:text-sm lg:text-base text-[#f4efe6] font-normal leading-relaxed">
+                  {currentLayer.caption}
+                </p>
+
+                {/* High-Impact Highlights / Badges */}
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {currentLayer.highlights.map((h, i) => (
                     <span
-                      className="font-bold tracking-wider"
-                      style={{ color: isSelected ? "#ff8539" : layer.color }}
+                      key={i}
+                      className="px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/10 font-mono text-[9.5px] text-[#ffedd6]"
                     >
-                      [0{layer.id}] {layer.name}
+                      {h}
                     </span>
-                    <span className="text-[7.5px] text-[#94a3b8]">
-                      {layer.badge.split("//")[1]?.trim()}
-                    </span>
-                  </div>
-                  <p className="text-[9.5px] text-[#94a3b8] font-sans leading-tight mt-0.5">
-                    {layer.caption}
-                  </p>
+                  ))}
                 </div>
-              );
-            })}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </motion.div>
 
-        {/* FRAME 4 - RIGHT FLANK: "HOW IT IS IMPLEMENTED" (MATCHING USER NOTEBOOK SKETCH) */}
+        {/* FRAME 4 - RIGHT FLANK: "HOW IT IS IMPLEMENTED" (ONE LAYER AT A TIME IN BIG LETTERS) */}
         <motion.div
           style={{ opacity: howItIsOpacity, x: howItIsX }}
-          className="absolute right-6 sm:right-8 md:right-10 lg:right-14 xl:right-20 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-end text-right max-w-[240px] lg:max-w-[280px] xl:max-w-[310px] pointer-events-auto select-none"
+          className="absolute right-6 sm:right-8 md:right-10 lg:right-14 xl:right-20 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-end text-right max-w-[320px] lg:max-w-[390px] xl:max-w-[440px] pointer-events-auto select-none"
         >
           {/* Eyebrow Pill */}
-          <div className="flex items-center gap-2 mb-1.5 font-mono text-[9px] sm:text-[10px] text-[#38bdf8] uppercase tracking-[0.2em] justify-end">
-            <span>PRODUCTION STACK</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
+          <div className="flex items-center gap-2 mb-2 font-mono text-[9.5px] sm:text-[10.5px] text-[#38bdf8] uppercase tracking-[0.2em] justify-end">
+            <span>PRODUCTION IMPLEMENTATION</span>
+            <span className="w-2 h-2 rounded-full bg-[#38bdf8] animate-pulse" />
           </div>
 
-          {/* Display Title: HOW IT IS IMPLEMENTED */}
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-[family-name:var(--font-display)] font-extrabold tracking-[-0.03em] text-[#ffedd6] leading-[0.95] uppercase">
-            HOW IT IS<br />
-            <span className="text-[#38bdf8]">IMPLEMENTED</span>
-          </h3>
+          {/* Section Marker */}
+          <div className="flex items-center gap-2 mb-1.5 font-mono text-[10px] text-[#ffedd6]/50 uppercase tracking-widest justify-end">
+            <span>HOW IT IS BUILT</span>
+            <span>&middot;</span>
+            <span className="text-[#38bdf8] font-bold">
+              [ 0{currentLayer.id} / 06 ]
+            </span>
+          </div>
 
-          <p className="font-mono text-[9.5px] sm:text-[10px] text-[#38bdf8] font-bold tracking-wider uppercase mt-1">
-            SUB-12MS HYPER-HEURISTICS
-          </p>
+          {/* BIG DISPLAY LETTERS: The Implementation Tech */}
+          <div className="relative w-full">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentLayer.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="flex flex-col items-end"
+              >
+                <h3 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-[family-name:var(--font-display)] font-black tracking-[-0.04em] text-[#ffedd6] leading-[0.92] uppercase min-h-[1.9em]">
+                  {currentLayer.bigTech1}
+                  <br />
+                  <span className="text-[#38bdf8] drop-shadow-[0_0_30px_rgba(56,189,248,0.35)]">
+                    {currentLayer.bigTech2}
+                  </span>
+                </h3>
 
-          {/* Caliper Hairline Divider */}
-          <div className="w-20 h-[1px] bg-gradient-to-l from-[#38bdf8] via-[rgba(255,237,214,0.2)] to-transparent my-2.5" />
+                {/* Caliper Hairline Divider */}
+                <div className="w-24 h-[2px] bg-gradient-to-l from-[#38bdf8] via-[rgba(255,237,214,0.2)] to-transparent my-3.5" />
 
-          {/* 6 Tech Implementation Specs (Hoverable & Synced) */}
-          <div className="space-y-1.5 w-full">
-            {STACK_LAYERS.map((layer) => {
-              const isSelected = activeLayerId === layer.id;
-              return (
-                <div
-                  key={layer.id}
-                  onMouseEnter={() => {
-                    playTactileClick(1400, 0.02);
-                    setActiveLayerId(layer.id);
-                  }}
-                  onMouseLeave={() => setActiveLayerId(null)}
-                  className={`p-2 rounded-xl transition-all cursor-pointer border text-right ${
-                    isSelected
-                      ? "bg-[#141724]/95 border-[#38bdf8] shadow-[0_0_22px_rgba(56,189,248,0.3)] -translate-x-1.5"
-                      : "bg-[#0d0f16]/65 border-white/[0.06] hover:border-white/20"
-                  }`}
-                >
-                  <div className="flex items-center justify-between text-[9px] font-mono">
-                    <span className="text-[7.5px] text-emerald-400 font-bold">
-                      {layer.metric}
-                    </span>
-                    <span
-                      className="font-bold tracking-wider"
-                      style={{ color: isSelected ? "#38bdf8" : "#ffedd6" }}
-                    >
-                      {layer.tech} [0{layer.id}]
+                {/* Technical Implementation Note */}
+                <p className="font-mono text-xs sm:text-sm text-[#94a3b8] leading-relaxed max-w-[360px]">
+                  {currentLayer.implementationDetail}
+                </p>
+
+                {/* Benchmark Caliper Box */}
+                <div className="mt-4 p-2.5 rounded-xl bg-[#0d0f16]/90 border border-white/10 font-mono text-[9.5px] text-right space-y-1">
+                  <div className="text-[#ffedd6] flex items-center justify-end gap-2">
+                    <span className="text-[#94a3b8]">TELEMETRY:</span>
+                    <span className="font-bold text-[#38bdf8]">
+                      {currentLayer.telemetry}
                     </span>
                   </div>
-                  <p className="text-[9.5px] text-[#94a3b8] font-mono leading-tight mt-0.5">
-                    {layer.telemetry}
-                  </p>
+                  <div className="text-emerald-400 flex items-center justify-end gap-2">
+                    <span className="text-[#94a3b8]">BENCHMARK:</span>
+                    <span className="font-bold text-emerald-400">
+                      {currentLayer.metric}
+                    </span>
+                  </div>
                 </div>
-              );
-            })}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </motion.div>
 
@@ -888,17 +957,17 @@ export function HeroToDeviceChoreography({
           className="absolute top-20 sm:top-24 inset-x-3 z-30 md:hidden flex flex-col items-center pointer-events-auto"
         >
           {/* Layer Selector Chips [01] to [06] */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-black/85 border border-white/10 mb-1.5 backdrop-blur-md">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-black/85 border border-white/10 mb-2 backdrop-blur-md">
             {STACK_LAYERS.map((layer) => {
-              const isSelected = (activeLayerId ?? 1) === layer.id;
+              const isSelected = currentLayer.id === layer.id;
               return (
                 <button
                   key={layer.id}
                   onClick={() => {
                     playTactileClick(1200, 0.02);
-                    setActiveLayerId(layer.id);
+                    setSelectedLayerId(layer.id);
                   }}
-                  className={`px-2 py-0.5 rounded-lg font-mono text-[9px] font-bold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-mono text-[10px] font-bold transition-all ${
                     isSelected
                       ? "bg-[#ffedd6] text-[#07080a] shadow-sm scale-105"
                       : "text-[#94a3b8] hover:text-[#ffedd6]"
@@ -910,57 +979,28 @@ export function HeroToDeviceChoreography({
             })}
           </div>
 
-          {/* Tab Switcher & Dynamic Content Preview */}
-          {(() => {
-            const currentLayer = STACK_LAYERS.find((l) => l.id === (activeLayerId ?? 1)) || STACK_LAYERS[0];
-            return (
-              <div className="w-full max-w-[340px] p-2.5 rounded-xl bg-[#0d0f16]/95 border border-[rgba(255,237,214,0.15)] backdrop-blur-md text-center shadow-[0_8px_24px_rgba(0,0,0,0.8)]">
-                {/* Mode Selector */}
-                <div className="flex items-center justify-center gap-2 mb-1.5">
-                  <button
-                    onClick={() => setMobileExplodedTab("what")}
-                    className={`px-2 py-0.5 rounded font-mono text-[8.5px] font-bold uppercase transition-all ${
-                      mobileExplodedTab === "what"
-                        ? "bg-[#ff8539] text-[#07080a]"
-                        : "text-[#94a3b8] bg-white/[0.04]"
-                    }`}
-                  >
-                    What It Is
-                  </button>
-                  <button
-                    onClick={() => setMobileExplodedTab("how")}
-                    className={`px-2 py-0.5 rounded font-mono text-[8.5px] font-bold uppercase transition-all ${
-                      mobileExplodedTab === "how"
-                        ? "bg-[#38bdf8] text-[#07080a]"
-                        : "text-[#94a3b8] bg-white/[0.04]"
-                    }`}
-                  >
-                    How It Is Built
-                  </button>
-                </div>
+          {/* Active Card in BIG BOLD LETTERS */}
+          <div className="w-full max-w-[340px] p-3 rounded-2xl bg-[#0d0f16]/95 border border-[rgba(255,237,214,0.15)] backdrop-blur-md text-center shadow-[0_12px_32px_rgba(0,0,0,0.85)]">
+            <span
+              className="font-mono text-[9px] font-bold uppercase tracking-widest block mb-0.5"
+              style={{ color: currentLayer.color }}
+            >
+              {currentLayer.badge} &middot; [0{currentLayer.id}/06]
+            </span>
 
-                {mobileExplodedTab === "what" ? (
-                  <div>
-                    <span className="font-mono text-[9px] font-bold uppercase tracking-wider block" style={{ color: currentLayer.color }}>
-                      {currentLayer.badge}
-                    </span>
-                    <p className="font-sans text-[10px] text-[#ffedd6] mt-0.5 leading-snug">
-                      {currentLayer.caption}
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    <span className="font-mono text-[9px] text-[#38bdf8] font-bold uppercase tracking-wider block">
-                      {currentLayer.tech} &middot; {currentLayer.metric}
-                    </span>
-                    <p className="font-mono text-[9.5px] text-emerald-400 mt-0.5">
-                      {currentLayer.telemetry}
-                    </p>
-                  </div>
-                )}
-              </div>
-            );
-          })()}
+            {/* BIG LETTERS ON MOBILE */}
+            <h2 className="text-xl sm:text-2xl font-[family-name:var(--font-display)] font-black tracking-tight text-[#ffedd6] uppercase leading-tight">
+              {currentLayer.name}
+            </h2>
+
+            <p className="font-mono text-[10px] text-[#38bdf8] font-bold uppercase tracking-wider mt-0.5">
+              {currentLayer.tech} &middot; {currentLayer.metric}
+            </p>
+
+            <p className="font-sans text-[11px] text-[#f4efe6]/90 mt-1 leading-snug">
+              {currentLayer.caption}
+            </p>
+          </div>
         </motion.div>
 
         {/* ========================================================================= */}
