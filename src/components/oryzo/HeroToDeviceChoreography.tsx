@@ -89,41 +89,70 @@ export function HeroToDeviceChoreography({
   });
 
   // =========================================================================
-  // CINEMATIC TRANSITIONS: FRAME 1 (HERO DESK) ➔ FRAME 2 (CENTERED PHONE LIFTOFF)
+  // CINEMATIC TRANSITIONS:
+  // FRAME 1 (HERO DESK) ➔ FRAME 2 (CENTERED PHONE) ➔ FRAME 3 (LAY FLAT AT BOTTOM)
   // =========================================================================
-  // 1. Desk background (oak table, green mat, stationery) dissolves to black [0.00, 0.32]
-  const deskOpacity = useTransform(smoothProgress, [0.0, 0.32], [1, 0]);
-  const deskScale = useTransform(smoothProgress, [0.0, 0.32], [1, 1.05]);
 
-  // 2. Hero Headline and corner cards dissolve & drift upward [0.00, 0.22]
-  const heroUiOpacity = useTransform(smoothProgress, [0.0, 0.22], [1, 0]);
-  const heroUiY = useTransform(smoothProgress, [0.0, 0.22], [0, -45]);
+  // 1. Desk background (oak table, green mat, stationery) dissolves to black [0.00, 0.22]
+  const deskOpacity = useTransform(smoothProgress, [0.0, 0.22], [1, 0]);
+  const deskScale = useTransform(smoothProgress, [0.0, 0.22], [1, 1.05]);
 
-  // 3. Phone Liftoff from bottom peeking dock to exact center [0.00, 0.36]
-  // In Frame 1: phone sits upright docked at bottom (translateY: 34vh).
-  // In Frame 2: phone is perfectly centered in viewport (translateY: 0vh).
-  const phoneTranslateY = useTransform(smoothProgress, [0.0, 0.36], ["34vh", "0vh"]);
-  const phoneScale = useTransform(smoothProgress, [0.0, 0.36], [0.96, 1.0]);
+  // 2. Hero Headline and corner cards dissolve & drift upward [0.00, 0.16]
+  const heroUiOpacity = useTransform(smoothProgress, [0.0, 0.16], [1, 0]);
+  const heroUiY = useTransform(smoothProgress, [0.0, 0.16], [0, -45]);
 
-  // 4. Contact shadow on mat fades as phone lifts into the air [0.00, 0.24]
-  const matShadowOpacity = useTransform(smoothProgress, [0.0, 0.24], [1, 0]);
+  // 3. Phone Liftoff from bottom peeking dock to center, then moves down & lays flat in Frame 3
+  // Frame 1: translateY: "34vh", rotateX: "0deg", scale: 0.96
+  // Frame 2: translateY: "0vh", rotateX: "0deg", scale: 1.0 (centered upright)
+  // Frame 3: translateY: "24vh", rotateX: "66deg", scale: 1.05 (laying flat near bottom)
+  const phoneTranslateY = useTransform(
+    smoothProgress,
+    [0.0, 0.28, 0.48, 0.66, 1.0],
+    ["34vh", "0vh", "0vh", "24vh", "24vh"]
+  );
+  const phoneRotateX = useTransform(
+    smoothProgress,
+    [0.0, 0.48, 0.66, 1.0],
+    ["0deg", "0deg", "66deg", "66deg"]
+  );
+  const phoneScale = useTransform(
+    smoothProgress,
+    [0.0, 0.28, 0.48, 0.66, 1.0],
+    [0.96, 1.0, 1.0, 1.05, 1.05]
+  );
 
-  // 5. Dual Directional Orange Backlight (Top-Left & Bottom-Right)
-  const backlightOpacity = useTransform(smoothProgress, [0.18, 0.36], [0, 1]);
+  // 4. Contact shadow on mat fades as phone lifts into the air [0.00, 0.20]
+  const matShadowOpacity = useTransform(smoothProgress, [0.0, 0.20], [1, 0]);
 
-  // 6. Frame 2 Flanks: App Name (Left) and "Engineered by Hand, Built by AI" (Right)
-  const frame2SideOpacity = useTransform(smoothProgress, [0.24, 0.36], [0, 1]);
-  const frame2LeftX = useTransform(smoothProgress, [0.24, 0.36], [-35, 0]);
-  const frame2RightX = useTransform(smoothProgress, [0.24, 0.36], [35, 0]);
+  // 5. Ambient Floating Shadow behind upright phone in Frame 2, fading as it tilts flat [0.48, 0.60]
+  const frame2ShadowOpacity = useTransform(smoothProgress, [0.18, 0.28, 0.48, 0.60], [0, 1, 1, 0]);
 
-  // 7. Frame 2 studio HUD / caliper badge [0.26, 0.38]
-  const frame2HudOpacity = useTransform(smoothProgress, [0.26, 0.38], [0, 1]);
-  const frame2HudY = useTransform(smoothProgress, [0.26, 0.38], [15, 0]);
+  // 6. Flat Ground Shadow underneath phone in Frame 3 as it lays flat [0.50, 0.66]
+  const flatShadowOpacity = useTransform(smoothProgress, [0.50, 0.66], [0, 0.88]);
+  const flatShadowScale = useTransform(smoothProgress, [0.50, 0.66], [0.75, 1.08]);
+
+  // 7. Oryzo-style Corner Atmospheric Backlight on stage (remains throughout dark stage)
+  const backlightOpacity = useTransform(smoothProgress, [0.16, 0.28], [0, 1]);
+
+  // 8. Frame 2 Flanks: App Name (Left) and "Engineered by Hand, Built by AI" (Right)
+  // Fades in for Frame 2 [0.22, 0.30], holds, then fades out as phone lays flat into Frame 3 [0.48, 0.56]
+  const frame2SideOpacity = useTransform(smoothProgress, [0.22, 0.30, 0.48, 0.56], [0, 1, 1, 0]);
+  const frame2LeftX = useTransform(smoothProgress, [0.22, 0.30, 0.48, 0.56], [-35, 0, 0, -40]);
+  const frame2RightX = useTransform(smoothProgress, [0.22, 0.30, 0.48, 0.56], [35, 0, 0, 40]);
+
+  // 9. Frame 2 studio HUD / caliper badge [0.24, 0.32, 0.48, 0.56]
+  const frame2HudOpacity = useTransform(smoothProgress, [0.24, 0.32, 0.48, 0.56], [0, 1, 1, 0]);
+  const frame2HudY = useTransform(smoothProgress, [0.24, 0.32, 0.48, 0.56], [15, 0, 0, -15]);
+
+  // 10. Multi-Phase Scroll Cue in Lower Bar
+  const prompt1Opacity = useTransform(smoothProgress, [0.0, 0.22], [1, 0]);
+  const prompt2Opacity = useTransform(smoothProgress, [0.24, 0.32, 0.48, 0.56], [0, 1, 1, 0]);
+  const prompt3Opacity = useTransform(smoothProgress, [0.56, 0.66], [0, 1]);
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[260vh] bg-[#07080a] select-none"
+      className="relative w-full h-[420vh] bg-[#07080a] select-none"
     >
       {/* STICKY FULL-SCREEN VIEWPORT LOCK (Seamless zero border transition) */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
@@ -409,14 +438,16 @@ export function HeroToDeviceChoreography({
         </motion.div>
 
         {/* ========================================================================= */}
-        {/* LAYER 4: THE PHONE (LIFTS OFF DESK TO DEAD CENTER IN FRAME 2) */}
+        {/* LAYER 4: THE PHONE (LIFTS OFF DESK TO DEAD CENTER IN FRAME 2, THEN MOVES DOWN & LAYS FLAT IN FRAME 3) */}
         {/* ========================================================================= */}
-        <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
-          {/* Animated Motion Container Controlling Liftoff & Scale (120 FPS GPU-accelerated) */}
+        <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none [perspective:1400px]">
+          {/* Animated Motion Container Controlling Liftoff, Position & 3D Tilt */}
           <motion.div
             style={{
               y: phoneTranslateY,
               scale: phoneScale,
+              rotateX: phoneRotateX,
+              transformStyle: "preserve-3d",
             }}
             className="relative flex items-center justify-center will-change-transform transform-gpu"
           >
@@ -426,11 +457,23 @@ export function HeroToDeviceChoreography({
               className="absolute top-1/2 w-[260px] sm:w-[290px] lg:w-[320px] h-[300px] bg-black/90 rounded-[56px] blur-3xl pointer-events-none"
             />
 
-            {/* Natural Ambient Floating Shadow behind the device (Realistic depth without fake glow) */}
-            <div className="absolute top-1/2 w-[270px] sm:w-[290px] md:w-[310px] lg:w-[325px] h-[500px] sm:h-[525px] md:h-[545px] lg:h-[560px] -translate-y-1/2 bg-black/85 rounded-[52px] blur-2xl pointer-events-none -z-10" />
+            {/* Upright Floating Ambient Shadow (Frame 2) */}
+            <motion.div
+              style={{ opacity: frame2ShadowOpacity }}
+              className="absolute top-1/2 w-[270px] sm:w-[290px] md:w-[310px] lg:w-[325px] h-[500px] sm:h-[525px] md:h-[545px] lg:h-[560px] -translate-y-1/2 bg-black/85 rounded-[52px] blur-2xl pointer-events-none -z-10"
+            />
+
+            {/* Ground Flat Shadow beneath phone in Frame 3 when laying flat */}
+            <motion.div
+              style={{
+                opacity: flatShadowOpacity,
+                scale: flatShadowScale,
+              }}
+              className="absolute -bottom-10 w-[310px] sm:w-[340px] lg:w-[370px] h-[100px] bg-black/95 rounded-[50%] blur-xl pointer-events-none -z-20 transform-gpu"
+            />
 
             {/* The High-Fidelity 2D React iPhone 16 Pro Frame (Non-Glowing, Physical Precision) */}
-            {/* Strictly upright, straight, facing viewer (matching Frame 2 in sketch) */}
+            {/* Upright in Frame 2, Lays Flat in Frame 3 */}
             <DeviceFrame
               onOpenPlayground={onTryItNow}
               className="pointer-events-auto"
@@ -553,10 +596,29 @@ export function HeroToDeviceChoreography({
             </span>
           </button>
 
-          {/* Center Scroll Prompt */}
-          <div className="hidden sm:flex items-center gap-2 text-[#ffedd6]/80 tracking-widest uppercase">
-            <span>SCROLL TO LIFT DEVICE</span>
-            <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
+          {/* Center Scroll Prompt (Multi-Phase Crossfade) */}
+          <div className="hidden sm:flex items-center justify-center text-[#ffedd6]/80 tracking-widest uppercase relative h-5 w-60">
+            <motion.div
+              style={{ opacity: prompt1Opacity }}
+              className="absolute inset-0 flex items-center justify-center gap-2 pointer-events-none"
+            >
+              <span>SCROLL TO LIFT DEVICE</span>
+              <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
+            </motion.div>
+            <motion.div
+              style={{ opacity: prompt2Opacity }}
+              className="absolute inset-0 flex items-center justify-center gap-2 pointer-events-none"
+            >
+              <span>SCROLL TO LAY FLAT</span>
+              <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
+            </motion.div>
+            <motion.div
+              style={{ opacity: prompt3Opacity }}
+              className="absolute inset-0 flex items-center justify-center gap-2 text-[#ff8539] pointer-events-none"
+            >
+              <span>STAGE 03 // ARCHITECTURE</span>
+              <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
+            </motion.div>
           </div>
 
           {/* Caliper Telemetry */}
