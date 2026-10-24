@@ -59,13 +59,13 @@ export function DeviceFrame({
       title="Click to launch Zero-Auth App Playground"
     >
       {/* Outer Titanium Chassis Frame (Apple Natural Titanium / Space Black PBR) */}
-      <div className="relative w-full h-full rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2.5px] bg-gradient-to-b from-[#404352] via-[#242630] to-[#15161d] shadow-[0_22px_50px_rgba(0,0,0,0.95),0_0_0_1px_rgba(255,255,255,0.15),inset_0_1px_1px_rgba(255,255,255,0.45)]">
-        {/* Directional Dual-Angle Rim Specular Sheen (Top-Left & Bottom-Right) */}
+      <div className="relative w-full h-full rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2.5px] bg-gradient-to-b from-[#3d404d] via-[#22242d] to-[#14151a] shadow-[0_28px_65px_rgba(0,0,0,0.92),0_0_0_1px_rgba(255,255,255,0.14),inset_0_1px_1px_rgba(255,255,255,0.35)]">
+        {/* Subtle Metallic Specular Reflection on Bezel Rim */}
         <div
-          className="absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] pointer-events-none opacity-85 z-10"
+          className="absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] pointer-events-none opacity-60 z-10"
           style={{
             background:
-              "linear-gradient(135deg, rgba(255, 160, 60, 0.45) 0%, rgba(255, 133, 57, 0.15) 15%, transparent 35%, transparent 65%, rgba(255, 115, 30, 0.15) 85%, rgba(255, 140, 50, 0.38) 100%)",
+              "linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.04) 22%, transparent 42%, transparent 68%, rgba(255, 255, 255, 0.08) 100%)",
           }}
         />
 
@@ -75,10 +75,22 @@ export function DeviceFrame({
         <div className="absolute left-0 top-30 w-[2.5px] h-6 bg-[#2b2d38] -translate-x-full rounded-l-sm" />
         <div className="absolute right-0 top-20 w-[2.5px] h-8 bg-[#2b2d38] translate-x-full rounded-r-sm" />
 
-        {/* Micro Bezel Ring */}
-        <div className="w-full h-full rounded-[39px] sm:rounded-[43px] p-[6px] sm:p-[7px] bg-[#0c0d12] shadow-inner">
+        {/* Micro Bezel Ring (Crisp Matte Obsidian, Non-Glowing) */}
+        <div
+          className="w-full h-full rounded-[39px] sm:rounded-[43px] p-[6px] sm:p-[7px] bg-[#0c0d12]"
+          style={{
+            boxShadow:
+              "inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 0 0 1px rgba(0, 0, 0, 0.85)",
+          }}
+        >
           {/* OLED Screen Surface */}
-          <div className="relative w-full h-full rounded-[33px] sm:rounded-[37px] bg-[#07080c] overflow-hidden flex flex-col justify-between border border-white/[0.04]">
+          <div
+            className="relative w-full h-full rounded-[33px] sm:rounded-[37px] bg-[#07080c] overflow-hidden flex flex-col justify-between border border-white/[0.04]"
+            style={{
+              boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.03)",
+            }}
+          >
+
             {/* Ceramic Shield Glass Reflection Sheen */}
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-white/[0.08] pointer-events-none z-30" />
             <div className="absolute -inset-full bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.06),transparent_60%)] pointer-events-none z-30" />

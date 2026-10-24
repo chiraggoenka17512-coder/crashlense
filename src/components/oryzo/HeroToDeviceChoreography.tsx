@@ -110,7 +110,6 @@ export function HeroToDeviceChoreography({
 
   // 5. Dual Directional Orange Backlight (Top-Left & Bottom-Right)
   const backlightOpacity = useTransform(smoothProgress, [0.18, 0.36], [0, 1]);
-  const backlightScale = useTransform(smoothProgress, [0.18, 0.38], [0.85, 1.05]);
 
   // 6. Frame 2 Flanks: App Name (Left) and "Engineered by Hand, Built by AI" (Right)
   const frame2SideOpacity = useTransform(smoothProgress, [0.24, 0.36], [0, 1]);
@@ -126,8 +125,8 @@ export function HeroToDeviceChoreography({
       ref={containerRef}
       className="relative w-full h-[260vh] bg-[#07080a] select-none"
     >
-      {/* STICKY FULL-SCREEN VIEWPORT LOCK */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden border-b border-[rgba(255,237,214,0.08)]">
+      {/* STICKY FULL-SCREEN VIEWPORT LOCK (Seamless zero border transition) */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* ========================================================================= */}
         {/* LAYER 1: JAPANESE OAK TABLETOP + CUTTING MAT + PROPS (FADES TO BLACK) */}
         {/* ========================================================================= */}
@@ -310,6 +309,32 @@ export function HeroToDeviceChoreography({
         </div>
 
         {/* ========================================================================= */}
+        {/* ORYZO-STYLE CORNER ATMOSPHERIC BACKLIGHT (FADES IN AS DESK DISSOLVES) */}
+        {/* ========================================================================= */}
+        <motion.div
+          style={{ opacity: backlightOpacity }}
+          className="absolute inset-0 pointer-events-none z-[1] overflow-hidden"
+        >
+          {/* 1. TOP-LEFT CORNER BACKLIGHT (Deep rich amber atmospheric bloom matching Oryzo) */}
+          <div
+            className="absolute -top-[15%] -left-[10%] w-[65vw] max-w-[950px] h-[65vw] max-h-[950px] rounded-full blur-[110px] sm:blur-[160px] pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle at 35% 35%, rgba(220, 120, 45, 0.38) 0%, rgba(160, 80, 25, 0.20) 42%, rgba(95, 42, 15, 0.08) 68%, transparent 85%)",
+            }}
+          />
+
+          {/* 2. BOTTOM-RIGHT CORNER BACKLIGHT (Subtle warm counter-fill bloom) */}
+          <div
+            className="absolute -bottom-[15%] -right-[10%] w-[55vw] max-w-[800px] h-[55vw] max-h-[800px] rounded-full blur-[120px] sm:blur-[170px] pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle at 65% 65%, rgba(200, 100, 35, 0.22) 0%, rgba(140, 65, 20, 0.10) 42%, transparent 78%)",
+            }}
+          />
+        </motion.div>
+
+        {/* ========================================================================= */}
         {/* LAYER 2: HERO BRAND HEADLINE (FRAME 1 - NO SPECIFICATIONS) */}
         {/* ========================================================================= */}
         <motion.div
@@ -401,63 +426,14 @@ export function HeroToDeviceChoreography({
               className="absolute top-1/2 w-[260px] sm:w-[290px] lg:w-[320px] h-[300px] bg-black/90 rounded-[56px] blur-3xl pointer-events-none"
             />
 
-            {/* DUAL DIRECTIONAL ORANGE BACKLIGHT (Top-Left & Bottom-Right Keylights) */}
-            <motion.div
-              style={{
-                opacity: backlightOpacity,
-                scale: backlightScale,
-              }}
-              className="absolute -inset-16 sm:-inset-24 lg:-inset-32 rounded-full pointer-events-none z-0 overflow-visible will-change-transform transform-gpu"
-            >
-              {/* 1. TOP-LEFT KEYLIGHT BEAM & VIBRANT BLOOM */}
-              <div
-                className="absolute -top-16 -left-16 sm:-top-24 sm:-left-24 lg:-top-32 lg:-left-32 w-[340px] sm:w-[420px] lg:w-[480px] h-[340px] sm:h-[420px] lg:h-[480px] rounded-full blur-3xl"
-                style={{
-                  background:
-                    "radial-gradient(circle at 35% 35%, rgba(255, 145, 55, 0.65) 0%, rgba(255, 120, 30, 0.38) 38%, rgba(255, 90, 10, 0.12) 62%, transparent 75%)",
-                }}
-              />
-              {/* Top-Left Wide Atmospheric Diffusion */}
-              <div
-                className="absolute -top-24 -left-24 sm:-top-36 sm:-left-36 lg:-top-44 lg:-left-44 w-[520px] sm:w-[640px] lg:w-[740px] h-[520px] sm:h-[640px] lg:h-[740px] rounded-full blur-[85px] sm:blur-[115px]"
-                style={{
-                  background:
-                    "radial-gradient(ellipse at 30% 30%, rgba(255, 150, 60, 0.32) 0%, rgba(255, 115, 25, 0.12) 45%, transparent 75%)",
-                }}
-              />
+            {/* Natural Ambient Floating Shadow behind the device (Realistic depth without fake glow) */}
+            <div className="absolute top-1/2 w-[270px] sm:w-[290px] md:w-[310px] lg:w-[325px] h-[500px] sm:h-[525px] md:h-[545px] lg:h-[560px] -translate-y-1/2 bg-black/85 rounded-[52px] blur-2xl pointer-events-none -z-10" />
 
-              {/* 2. BOTTOM-RIGHT COUNTER / FILL LIGHT BEAM & VIBRANT BLOOM */}
-              <div
-                className="absolute -bottom-16 -right-16 sm:-bottom-24 sm:-right-24 lg:-bottom-32 lg:-right-32 w-[320px] sm:w-[390px] lg:w-[450px] h-[320px] sm:h-[390px] lg:h-[450px] rounded-full blur-3xl"
-                style={{
-                  background:
-                    "radial-gradient(circle at 65% 65%, rgba(255, 135, 45, 0.58) 0%, rgba(255, 110, 25, 0.34) 38%, rgba(255, 80, 10, 0.10) 62%, transparent 75%)",
-                }}
-              />
-              {/* Bottom-Right Wide Atmospheric Diffusion */}
-              <div
-                className="absolute -bottom-24 -right-24 sm:-bottom-36 sm:-right-36 lg:-bottom-44 lg:-right-44 w-[480px] sm:w-[580px] lg:w-[680px] h-[480px] sm:h-[580px] lg:h-[680px] rounded-full blur-[80px] sm:blur-[110px]"
-                style={{
-                  background:
-                    "radial-gradient(ellipse at 70% 70%, rgba(255, 140, 50, 0.28) 0%, rgba(255, 100, 20, 0.10) 45%, transparent 75%)",
-                }}
-              />
-
-              {/* 3. Subtle Warm Ambient Core Connecting Diagonal Beams */}
-              <div
-                className="absolute inset-4 rounded-full blur-2xl"
-                style={{
-                  background:
-                    "radial-gradient(ellipse at center, rgba(255, 133, 57, 0.35) 0%, rgba(255, 115, 30, 0.15) 50%, transparent 75%)",
-                }}
-              />
-            </motion.div>
-
-            {/* The High-Fidelity 2D React iPhone 16 Pro Frame */}
+            {/* The High-Fidelity 2D React iPhone 16 Pro Frame (Non-Glowing, Physical Precision) */}
             {/* Strictly upright, straight, facing viewer (matching Frame 2 in sketch) */}
             <DeviceFrame
               onOpenPlayground={onTryItNow}
-              className="pointer-events-auto shadow-[0_24px_65px_rgba(0,0,0,0.95)]"
+              className="pointer-events-auto"
             />
           </motion.div>
         </div>
@@ -554,9 +530,9 @@ export function HeroToDeviceChoreography({
         </motion.div>
 
         {/* ========================================================================= */}
-        {/* LAYER 6: BOTTOM CALIPER BAR & HAPTIC CONTROLS */}
+        {/* LAYER 6: BOTTOM CALIPER BAR & HAPTIC CONTROLS (SEAMLESS GRADIENT VIGNETTE) */}
         {/* ========================================================================= */}
-        <div className="absolute bottom-0 inset-x-0 z-30 w-full px-6 sm:px-12 py-3 bg-[#07080a]/92 backdrop-blur-md border-t border-[rgba(255,237,214,0.08)] flex items-center justify-between font-mono text-[10px] sm:text-[11px] text-[#94a3b8]">
+        <div className="absolute bottom-0 inset-x-0 z-30 w-full px-6 sm:px-12 pt-16 pb-5 bg-gradient-to-t from-[#07080a] via-[#07080a]/80 via-40% to-transparent border-0 flex items-center justify-between font-mono text-[10px] sm:text-[11px] text-[#94a3b8] pointer-events-none">
           {/* Sound Toggle */}
           <button
             onClick={() => {
@@ -564,7 +540,7 @@ export function HeroToDeviceChoreography({
               setSoundEnabled(next);
               if (next) playTactileClick(1000, 0.05);
             }}
-            className="flex items-center gap-1.5 hover:text-[#ffedd6] transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 hover:text-[#ffedd6] transition-colors cursor-pointer pointer-events-auto"
             title="Toggle Tactile Haptics"
           >
             {soundEnabled ? (

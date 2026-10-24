@@ -68,8 +68,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#07080a] text-[#f4efe6] flex flex-col relative selection:bg-[#ff8539]/20 selection:text-[#ffedd6] scroll-smooth">
-      {/* Global Sticky Oryzo Navbar */}
-      <Navbar className="fixed top-0 left-0 right-0 z-50 w-full border-b border-[rgba(255,237,214,0.08)] bg-[#07080a]/80 backdrop-blur-xl" />
+      {/* Global Floating Oryzo Navbar (Seamless gradient blend, zero hard rectangular cuts) */}
+      <Navbar className="fixed top-0 left-0 right-0 z-50 w-full border-none bg-gradient-to-b from-[#07080a] via-[#07080a]/80 via-40% to-transparent pb-8 pt-1 pointer-events-auto" />
 
       {/* ========================================================================= */}
       {/* GLOBAL CONVERSION: STICKY "TRY IT NOW" BUTTON (VISIBLE FROM STAGE 2 ONWARD) */}

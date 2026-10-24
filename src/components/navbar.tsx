@@ -24,7 +24,7 @@ export function Navbar({ className }: { className?: string } = {}) {
   const pathname = usePathname();
 
   return (
-    <header className={className || "sticky top-0 z-50 w-full border-b border-[rgba(255,237,214,0.08)] bg-[#07080a]/85 backdrop-blur-2xl"}>
+    <header className={className || "fixed top-0 left-0 right-0 z-50 w-full border-none bg-gradient-to-b from-[#07080a] via-[#07080a]/80 via-40% to-transparent pb-8 pt-1"}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand / Logo */}
         <Link href="/" className="flex items-center gap-3 group">
