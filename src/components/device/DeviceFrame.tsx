@@ -54,7 +54,7 @@ export function DeviceFrame({
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative w-[270px] sm:w-[290px] md:w-[310px] lg:w-[325px] h-[510px] sm:h-[535px] md:h-[555px] lg:h-[570px] max-h-[72vh] select-none transition-transform duration-200 cursor-pointer ${className}`}
+      className={`relative w-[270px] sm:w-[290px] md:w-[310px] lg:w-[325px] h-[510px] sm:h-[535px] md:h-[555px] lg:h-[570px] max-h-[72vh] select-none cursor-pointer ${className}`}
       onClick={onOpenPlayground}
       title="Click to launch Zero-Auth App Playground"
     >
