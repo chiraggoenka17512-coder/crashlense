@@ -8,8 +8,11 @@ import {
   useTransform,
   useSpring,
 } from "motion/react";
-import { DeviceFrame } from "@/components/device/DeviceFrame";
 import { CuttingMat } from "@/components/oryzo/CuttingMat";
+import {
+  ExplodedChoreographyLayers,
+  STACK_LAYERS,
+} from "@/components/oryzo/ExplodedChoreographyLayers";
 import { SITE_CONFIG } from "@/config/site-config";
 import {
   Play,
@@ -31,6 +34,8 @@ export function HeroToDeviceChoreography({
   const [penHovered, setPenHovered] = useState(false);
   const [pencilHovered, setPencilHovered] = useState(false);
   const [clipsHovered, setClipsHovered] = useState(false);
+  const [activeLayerId, setActiveLayerId] = useState<number | null>(null);
+  const [mobileExplodedTab, setMobileExplodedTab] = useState<"what" | "how">("what");
 
   // Mouse parallax for subtle studio depth
   const mouseX = useSpring(0, { stiffness: 45, damping: 25 });
@@ -90,31 +95,31 @@ export function HeroToDeviceChoreography({
 
   // =========================================================================
   // CINEMATIC TRANSITIONS:
-  // FRAME 1 (HERO DESK) ➔ FRAME 2 (CENTERED PHONE) ➔ FRAME 3 (LAY FLAT AT BOTTOM)
+  // FRAME 1 (HERO DESK) ➔ FRAME 2 (CENTERED PHONE) ➔ FRAME 3 (LAY FLAT AT BOTTOM) ➔ FRAME 4 (EXPLODED SCREEN)
   // =========================================================================
 
-  // 1. Desk background (oak table, green mat, stationery) dissolves to black [0.00, 0.22]
-  const deskOpacity = useTransform(smoothProgress, [0.0, 0.22], [1, 0]);
-  const deskScale = useTransform(smoothProgress, [0.0, 0.22], [1, 1.05]);
+  // 1. Desk background (oak table, green mat, stationery) dissolves to black [0.00, 0.18]
+  const deskOpacity = useTransform(smoothProgress, [0.0, 0.18], [1, 0]);
+  const deskScale = useTransform(smoothProgress, [0.0, 0.18], [1, 1.05]);
 
-  // 2. Hero Headline and corner cards dissolve & drift upward [0.00, 0.16]
-  const heroUiOpacity = useTransform(smoothProgress, [0.0, 0.16], [1, 0]);
-  const heroUiY = useTransform(smoothProgress, [0.0, 0.16], [0, -45]);
+  // 2. Hero Headline and corner cards dissolve & drift upward [0.00, 0.14]
+  const heroUiOpacity = useTransform(smoothProgress, [0.0, 0.14], [1, 0]);
+  const heroUiY = useTransform(smoothProgress, [0.0, 0.14], [0, -45]);
 
   // 3. Phone Liftoff from bottom peeking dock to center, then moves down & lays flat in Frame 3
   // Hermite S-curve interpolation for velvety cinematic ease-in, peak velocity, and cushion landing
   const phoneTranslateY = useTransform(
     smoothProgress,
     [
-      0.00, 0.12, 0.17, 0.22, 0.27, 0.31, // Phase 1: liftoff from dock to center
-      0.47,                               // Phase 2: center showcase hold
-      0.50, 0.54, 0.59, 0.65, 0.71, 0.76, 0.80, // Phase 3: Hermite S-curve downward glide
-      1.00                                // Frame 3: resting flat
+      0.00, 0.08, 0.12, 0.16, 0.20, 0.24, // Phase 1: liftoff from dock to center
+      0.36,                               // Phase 2: center showcase hold
+      0.40, 0.44, 0.48, 0.52, 0.56,       // Phase 3: Hermite S-curve downward glide
+      1.00                                // Frame 3 & 4: resting flat at 25vh
     ],
     [
-      "34vh", "34vh", "27vh", "16vh", "5vh", "0vh",
+      "34vh", "34vh", "26vh", "15vh", "4vh", "0vh",
       "0vh",
-      "0.8vh", "3.6vh", "9.2vh", "17.0vh", "22.6vh", "24.6vh", "25vh",
+      "1.5vh", "6.5vh", "15.5vh", "22.5vh", "25vh",
       "25vh"
     ]
   );
@@ -123,13 +128,13 @@ export function HeroToDeviceChoreography({
   const phoneRotateX = useTransform(
     smoothProgress,
     [
-      0.00, 0.49,                         // Upright through Frame 1 & 2
-      0.51, 0.55, 0.60, 0.66, 0.72, 0.77, 0.82, // Decoupled follow-through pitch tilt
+      0.00, 0.38,                         // Upright through Frame 1 & 2
+      0.41, 0.45, 0.49, 0.53, 0.56,       // Decoupled follow-through pitch tilt
       1.00
     ],
     [
       "0deg", "0deg",
-      "1.8deg", "8.5deg", "22deg", "42deg", "59deg", "66.5deg", "68deg",
+      "4deg", "18deg", "42deg", "62deg", "68deg",
       "68deg"
     ]
   );
@@ -137,114 +142,166 @@ export function HeroToDeviceChoreography({
   // Z-depth spatial recession (phone steps back into 3D stage volume as it tilts flat)
   const phoneTranslateZ = useTransform(
     smoothProgress,
-    [0.00, 0.49, 0.56, 0.64, 0.72, 0.80, 1.00],
-    ["0px", "0px", "-12px", "-38px", "-64px", "-75px", "-75px"]
+    [0.00, 0.38, 0.44, 0.50, 0.56, 1.00],
+    ["0px", "0px", "-25px", "-55px", "-75px", "-75px"]
   );
 
   // Subtle organic roll dynamic for physical weighted feel
   const phoneRotateZ = useTransform(
     smoothProgress,
-    [0.00, 0.50, 0.60, 0.70, 0.80, 1.00],
-    ["0deg", "0deg", "-1.1deg", "-0.4deg", "0deg", "0deg"]
+    [0.00, 0.40, 0.46, 0.54, 1.00],
+    ["0deg", "0deg", "-1.1deg", "0deg", "0deg"]
   );
 
   // Scale expansion to preserve hero presence as phone lays flat
   const phoneScale = useTransform(
     smoothProgress,
     [
-      0.00, 0.16, 0.31,
-      0.47,
-      0.56, 0.68, 0.80,
+      0.00, 0.12, 0.24,
+      0.36,
+      0.46, 0.56,
       1.00
     ],
     [
       0.96, 0.97, 1.0,
       1.0,
-      1.025, 1.06, 1.075,
+      1.03, 1.075,
       1.075
     ]
   );
 
-  // 4. Contact shadow on mat fades as phone lifts into the air [0.00, 0.20]
-  const matShadowOpacity = useTransform(smoothProgress, [0.0, 0.20], [1, 0]);
+  // 4. Contact shadow on mat fades as phone lifts into the air [0.00, 0.16]
+  const matShadowOpacity = useTransform(smoothProgress, [0.0, 0.16], [1, 0]);
 
   // 5. Ambient Floating Shadow behind upright phone in Frame 2, fading as it tilts flat
   const frame2ShadowOpacity = useTransform(
     smoothProgress,
-    [0.20, 0.28, 0.46, 0.58],
+    [0.16, 0.24, 0.36, 0.46],
     [0, 1, 1, 0]
   );
 
   // 6. Flat Ground Shadow underneath phone in Frame 3 as it lays flat (expands and softens)
   const flatShadowOpacity = useTransform(
     smoothProgress,
-    [0.52, 0.60, 0.70, 0.80, 1.00],
-    [0, 0.25, 0.76, 0.95, 0.95]
+    [0.44, 0.52, 0.58, 1.00],
+    [0, 0.45, 0.95, 0.95]
   );
   const flatShadowScaleX = useTransform(
     smoothProgress,
-    [0.52, 0.66, 0.80, 1.00],
-    [0.65, 1.05, 1.28, 1.28]
+    [0.44, 0.58, 1.00],
+    [0.65, 1.28, 1.28]
   );
   const flatShadowScaleY = useTransform(
     smoothProgress,
-    [0.52, 0.66, 0.80, 1.00],
-    [0.35, 0.72, 0.95, 0.95]
+    [0.44, 0.58, 1.00],
+    [0.35, 0.95, 0.95]
   );
 
   // 7. Dynamic Grazing Light Sheen across Ceramic Shield glass during tilt
   const grazingSheenOpacity = useTransform(
     smoothProgress,
-    [0.52, 0.64, 0.78, 1.00],
-    [0, 0.24, 0.45, 0.45]
+    [0.45, 0.54, 0.60, 0.70],
+    [0, 0.35, 0.45, 0.0]
   );
 
   // 8. Oryzo-style Corner Atmospheric Backlight on stage (remains throughout dark stage)
-  const backlightOpacity = useTransform(smoothProgress, [0.16, 0.28], [0, 1]);
+  const backlightOpacity = useTransform(smoothProgress, [0.12, 0.22], [0, 1]);
 
   // 9. Frame 2 Flanks: App Name (Left) and "Engineered by Hand, Built by AI" (Right)
-  // Fades in for Frame 2 [0.22, 0.30], holds, then glides smoothly outward on exit [0.46, 0.54]
+  // Fades in for Frame 2 [0.18, 0.24], holds, then glides smoothly outward on exit [0.34, 0.40]
   const frame2SideOpacity = useTransform(
     smoothProgress,
-    [0.22, 0.30, 0.46, 0.54],
+    [0.18, 0.24, 0.34, 0.40],
     [0, 1, 1, 0]
   );
   const frame2LeftX = useTransform(
     smoothProgress,
-    [0.22, 0.30, 0.46, 0.54],
+    [0.18, 0.24, 0.34, 0.40],
     [-40, 0, 0, -65]
   );
   const frame2RightX = useTransform(
     smoothProgress,
-    [0.22, 0.30, 0.46, 0.54],
+    [0.18, 0.24, 0.34, 0.40],
     [40, 0, 0, 65]
   );
 
-  // 10. Frame 2 studio HUD / caliper badge [0.24, 0.32, 0.46, 0.54]
+  // 10. Frame 2 studio HUD / caliper badge [0.18, 0.24, 0.34, 0.40]
   const frame2HudOpacity = useTransform(
     smoothProgress,
-    [0.24, 0.32, 0.46, 0.54],
+    [0.18, 0.24, 0.34, 0.40],
     [0, 1, 1, 0]
   );
   const frame2HudY = useTransform(
     smoothProgress,
-    [0.24, 0.32, 0.46, 0.54],
+    [0.18, 0.24, 0.34, 0.40],
     [15, 0, 0, -18]
   );
 
-  // 11. Multi-Phase Scroll Cue in Lower Bar
-  const prompt1Opacity = useTransform(smoothProgress, [0.0, 0.20], [1, 0]);
-  const prompt2Opacity = useTransform(
+  // =========================================================================
+  // FRAME 4: THE EXPLODING SCREEN PART (6 FLOATING SLICES + WHAT IT IS & HOW IT IS IMPLEMENTED)
+  // =========================================================================
+
+  // Continuous scroll-driven separation of the 6 layers [0.52 ➔ 0.76]
+  const explosionProgress = useTransform(
     smoothProgress,
-    [0.24, 0.32, 0.46, 0.54],
+    [0.52, 0.56, 0.62, 0.70, 0.76, 0.88, 1.00],
+    [0.0, 0.12, 0.45, 0.82, 1.0, 1.0, 1.0]
+  );
+
+  // Frame 4 Left Flank: "WHAT IT IS" (matching user notebook sketch)
+  const whatItIsOpacity = useTransform(
+    smoothProgress,
+    [0.54, 0.62, 0.88, 0.94],
     [0, 1, 1, 0]
   );
-  const prompt3Opacity = useTransform(smoothProgress, [0.62, 0.76], [0, 1]);
+  const whatItIsX = useTransform(
+    smoothProgress,
+    [0.54, 0.62, 0.88, 0.94],
+    [-45, 0, 0, -55]
+  );
+
+  // Frame 4 Right Flank: "HOW IT IS IMPLEMENTED" (matching user notebook sketch)
+  const howItIsOpacity = useTransform(
+    smoothProgress,
+    [0.54, 0.62, 0.88, 0.94],
+    [0, 1, 1, 0]
+  );
+  const howItIsX = useTransform(
+    smoothProgress,
+    [0.54, 0.62, 0.88, 0.94],
+    [45, 0, 0, 55]
+  );
+
+  // Frame 4 Top Caliper HUD
+  const frame4HudOpacity = useTransform(
+    smoothProgress,
+    [0.54, 0.62, 0.88, 0.94],
+    [0, 1, 1, 0]
+  );
+
+  // Multi-Phase Scroll Cue in Lower Bar
+  const prompt1Opacity = useTransform(smoothProgress, [0.0, 0.16], [1, 0]);
+  const prompt2Opacity = useTransform(
+    smoothProgress,
+    [0.18, 0.24, 0.34, 0.40],
+    [0, 1, 1, 0]
+  );
+  const prompt3Opacity = useTransform(
+    smoothProgress,
+    [0.40, 0.46, 0.52, 0.56],
+    [0, 1, 1, 0]
+  );
+  const prompt4Opacity = useTransform(
+    smoothProgress,
+    [0.56, 0.64, 0.84, 0.89],
+    [0, 1, 1, 0]
+  );
+  const prompt5Opacity = useTransform(smoothProgress, [0.91, 0.97], [0, 1]);
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[460vh] bg-[#07080a] select-none"
+      className="relative w-full h-[640vh] bg-[#07080a] select-none"
     >
       {/* STICKY FULL-SCREEN VIEWPORT LOCK (Seamless zero border transition) */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
@@ -543,7 +600,7 @@ export function HeroToDeviceChoreography({
               rotateZ: phoneRotateZ,
               transformStyle: "preserve-3d",
             }}
-            className="relative flex items-center justify-center will-change-transform transform-gpu"
+            className="relative flex items-center justify-center will-change-transform transform-gpu scale-[0.88] sm:scale-100"
           >
             {/* Contact Shadow beneath phone on the desk (fades as phone lifts) */}
             <motion.div
@@ -582,9 +639,11 @@ export function HeroToDeviceChoreography({
               />
             </motion.div>
 
-            {/* The High-Fidelity 2D React iPhone 16 Pro Frame (Non-Glowing, Physical Precision) */}
-            {/* Upright in Frame 2, Lays Flat in Frame 3 */}
-            <DeviceFrame
+            {/* The High-Fidelity 6-Layer Exploded Architecture Phone */}
+            <ExplodedChoreographyLayers
+              explosionProgress={explosionProgress}
+              activeLayerId={activeLayerId}
+              onHoverLayer={setActiveLayerId}
               onOpenPlayground={onTryItNow}
               className="pointer-events-auto"
             />
@@ -683,7 +742,229 @@ export function HeroToDeviceChoreography({
         </motion.div>
 
         {/* ========================================================================= */}
-        {/* LAYER 6: BOTTOM CALIPER BAR & HAPTIC CONTROLS (SEAMLESS GRADIENT VIGNETTE) */}
+        {/* LAYER 6: FRAME 4 SIDE FLANKS ("WHAT IT IS" on LEFT, "HOW IT IS IMPLEMENTED" on RIGHT) */}
+        {/* ========================================================================= */}
+
+        {/* Top Caliper HUD for Frame 4 (Desktop only) */}
+        <motion.div
+          style={{ opacity: frame4HudOpacity }}
+          className="absolute top-20 sm:top-22 left-0 right-0 z-20 px-6 sm:px-12 pointer-events-none hidden md:flex items-center justify-between"
+        >
+          <div className="flex items-center gap-2 font-mono text-[10px] text-[#ff8539]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ff8539] animate-pulse" />
+            <span>STAGE 02 // 6-LAYER ARCHITECTURE EXPLODED</span>
+          </div>
+          <div className="font-mono text-[10px] text-[#ffedd6]/70">
+            [ HOVER ANY LAYER OR CARD TO INSPECT ]
+          </div>
+        </motion.div>
+
+        {/* FRAME 4 - LEFT FLANK: "WHAT IT IS" (MATCHING USER NOTEBOOK SKETCH) */}
+        <motion.div
+          style={{ opacity: whatItIsOpacity, x: whatItIsX }}
+          className="absolute left-6 sm:left-8 md:left-10 lg:left-14 xl:left-20 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-start max-w-[240px] lg:max-w-[280px] xl:max-w-[310px] pointer-events-auto select-none"
+        >
+          {/* Eyebrow Pill */}
+          <div className="flex items-center gap-2 mb-1.5 font-mono text-[9px] sm:text-[10px] text-[#ff8539] uppercase tracking-[0.2em]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ff8539] animate-pulse" />
+            <span>ARCHITECTURE // DECONSTRUCTED</span>
+          </div>
+
+          {/* Display Title: WHAT IT IS */}
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-[family-name:var(--font-display)] font-extrabold tracking-[-0.03em] text-[#ffedd6] leading-[0.95] uppercase">
+            WHAT IT IS
+          </h3>
+
+          <p className="font-mono text-[9.5px] sm:text-[10px] text-[#ff8539] font-bold tracking-wider uppercase mt-1">
+            6 FLOATING PHYSICAL SLICES
+          </p>
+
+          {/* Caliper Hairline Divider */}
+          <div className="w-20 h-[1px] bg-gradient-to-r from-[#ff8539] via-[rgba(255,237,214,0.2)] to-transparent my-2.5" />
+
+          {/* 6 Layer Descriptions (Hoverable & Synced) */}
+          <div className="space-y-1.5 w-full">
+            {STACK_LAYERS.map((layer) => {
+              const isSelected = activeLayerId === layer.id;
+              return (
+                <div
+                  key={layer.id}
+                  onMouseEnter={() => {
+                    playTactileClick(1200, 0.02);
+                    setActiveLayerId(layer.id);
+                  }}
+                  onMouseLeave={() => setActiveLayerId(null)}
+                  className={`p-2 rounded-xl transition-all cursor-pointer border ${
+                    isSelected
+                      ? "bg-[#141724]/95 border-[#ff8539] shadow-[0_0_22px_rgba(255,133,57,0.3)] translate-x-1.5"
+                      : "bg-[#0d0f16]/65 border-white/[0.06] hover:border-white/20"
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-[9px] font-mono">
+                    <span
+                      className="font-bold tracking-wider"
+                      style={{ color: isSelected ? "#ff8539" : layer.color }}
+                    >
+                      [0{layer.id}] {layer.name}
+                    </span>
+                    <span className="text-[7.5px] text-[#94a3b8]">
+                      {layer.badge.split("//")[1]?.trim()}
+                    </span>
+                  </div>
+                  <p className="text-[9.5px] text-[#94a3b8] font-sans leading-tight mt-0.5">
+                    {layer.caption}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* FRAME 4 - RIGHT FLANK: "HOW IT IS IMPLEMENTED" (MATCHING USER NOTEBOOK SKETCH) */}
+        <motion.div
+          style={{ opacity: howItIsOpacity, x: howItIsX }}
+          className="absolute right-6 sm:right-8 md:right-10 lg:right-14 xl:right-20 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-end text-right max-w-[240px] lg:max-w-[280px] xl:max-w-[310px] pointer-events-auto select-none"
+        >
+          {/* Eyebrow Pill */}
+          <div className="flex items-center gap-2 mb-1.5 font-mono text-[9px] sm:text-[10px] text-[#38bdf8] uppercase tracking-[0.2em] justify-end">
+            <span>PRODUCTION STACK</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
+          </div>
+
+          {/* Display Title: HOW IT IS IMPLEMENTED */}
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-[family-name:var(--font-display)] font-extrabold tracking-[-0.03em] text-[#ffedd6] leading-[0.95] uppercase">
+            HOW IT IS<br />
+            <span className="text-[#38bdf8]">IMPLEMENTED</span>
+          </h3>
+
+          <p className="font-mono text-[9.5px] sm:text-[10px] text-[#38bdf8] font-bold tracking-wider uppercase mt-1">
+            SUB-12MS HYPER-HEURISTICS
+          </p>
+
+          {/* Caliper Hairline Divider */}
+          <div className="w-20 h-[1px] bg-gradient-to-l from-[#38bdf8] via-[rgba(255,237,214,0.2)] to-transparent my-2.5" />
+
+          {/* 6 Tech Implementation Specs (Hoverable & Synced) */}
+          <div className="space-y-1.5 w-full">
+            {STACK_LAYERS.map((layer) => {
+              const isSelected = activeLayerId === layer.id;
+              return (
+                <div
+                  key={layer.id}
+                  onMouseEnter={() => {
+                    playTactileClick(1400, 0.02);
+                    setActiveLayerId(layer.id);
+                  }}
+                  onMouseLeave={() => setActiveLayerId(null)}
+                  className={`p-2 rounded-xl transition-all cursor-pointer border text-right ${
+                    isSelected
+                      ? "bg-[#141724]/95 border-[#38bdf8] shadow-[0_0_22px_rgba(56,189,248,0.3)] -translate-x-1.5"
+                      : "bg-[#0d0f16]/65 border-white/[0.06] hover:border-white/20"
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-[9px] font-mono">
+                    <span className="text-[7.5px] text-emerald-400 font-bold">
+                      {layer.metric}
+                    </span>
+                    <span
+                      className="font-bold tracking-wider"
+                      style={{ color: isSelected ? "#38bdf8" : "#ffedd6" }}
+                    >
+                      {layer.tech} [0{layer.id}]
+                    </span>
+                  </div>
+                  <p className="text-[9.5px] text-[#94a3b8] font-mono leading-tight mt-0.5">
+                    {layer.telemetry}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* Mobile Frame 4 Layer Inspector Bar & Toggle (Positioned cleanly at top beneath header) */}
+        <motion.div
+          style={{ opacity: whatItIsOpacity }}
+          className="absolute top-20 sm:top-24 inset-x-3 z-30 md:hidden flex flex-col items-center pointer-events-auto"
+        >
+          {/* Layer Selector Chips [01] to [06] */}
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-black/85 border border-white/10 mb-1.5 backdrop-blur-md">
+            {STACK_LAYERS.map((layer) => {
+              const isSelected = (activeLayerId ?? 1) === layer.id;
+              return (
+                <button
+                  key={layer.id}
+                  onClick={() => {
+                    playTactileClick(1200, 0.02);
+                    setActiveLayerId(layer.id);
+                  }}
+                  className={`px-2 py-0.5 rounded-lg font-mono text-[9px] font-bold transition-all ${
+                    isSelected
+                      ? "bg-[#ffedd6] text-[#07080a] shadow-sm scale-105"
+                      : "text-[#94a3b8] hover:text-[#ffedd6]"
+                  }`}
+                >
+                  0{layer.id}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Tab Switcher & Dynamic Content Preview */}
+          {(() => {
+            const currentLayer = STACK_LAYERS.find((l) => l.id === (activeLayerId ?? 1)) || STACK_LAYERS[0];
+            return (
+              <div className="w-full max-w-[340px] p-2.5 rounded-xl bg-[#0d0f16]/95 border border-[rgba(255,237,214,0.15)] backdrop-blur-md text-center shadow-[0_8px_24px_rgba(0,0,0,0.8)]">
+                {/* Mode Selector */}
+                <div className="flex items-center justify-center gap-2 mb-1.5">
+                  <button
+                    onClick={() => setMobileExplodedTab("what")}
+                    className={`px-2 py-0.5 rounded font-mono text-[8.5px] font-bold uppercase transition-all ${
+                      mobileExplodedTab === "what"
+                        ? "bg-[#ff8539] text-[#07080a]"
+                        : "text-[#94a3b8] bg-white/[0.04]"
+                    }`}
+                  >
+                    What It Is
+                  </button>
+                  <button
+                    onClick={() => setMobileExplodedTab("how")}
+                    className={`px-2 py-0.5 rounded font-mono text-[8.5px] font-bold uppercase transition-all ${
+                      mobileExplodedTab === "how"
+                        ? "bg-[#38bdf8] text-[#07080a]"
+                        : "text-[#94a3b8] bg-white/[0.04]"
+                    }`}
+                  >
+                    How It Is Built
+                  </button>
+                </div>
+
+                {mobileExplodedTab === "what" ? (
+                  <div>
+                    <span className="font-mono text-[9px] font-bold uppercase tracking-wider block" style={{ color: currentLayer.color }}>
+                      {currentLayer.badge}
+                    </span>
+                    <p className="font-sans text-[10px] text-[#ffedd6] mt-0.5 leading-snug">
+                      {currentLayer.caption}
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <span className="font-mono text-[9px] text-[#38bdf8] font-bold uppercase tracking-wider block">
+                      {currentLayer.tech} &middot; {currentLayer.metric}
+                    </span>
+                    <p className="font-mono text-[9.5px] text-emerald-400 mt-0.5">
+                      {currentLayer.telemetry}
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+        </motion.div>
+
+        {/* ========================================================================= */}
+        {/* LAYER 7: BOTTOM CALIPER BAR & HAPTIC CONTROLS (SEAMLESS GRADIENT VIGNETTE) */}
         {/* ========================================================================= */}
         <div className="absolute bottom-0 inset-x-0 z-30 w-full px-6 sm:px-12 pt-16 pb-5 bg-gradient-to-t from-[#07080a] via-[#07080a]/80 via-40% to-transparent border-0 flex items-center justify-between font-mono text-[10px] sm:text-[11px] text-[#94a3b8] pointer-events-none">
           {/* Sound Toggle */}
@@ -707,27 +988,41 @@ export function HeroToDeviceChoreography({
           </button>
 
           {/* Center Scroll Prompt (Multi-Phase Crossfade) */}
-          <div className="hidden sm:flex items-center justify-center text-[#ffedd6]/80 tracking-widest uppercase relative h-5 w-60">
+          <div className="hidden sm:flex items-center justify-center text-[#ffedd6]/80 tracking-widest uppercase relative h-5 w-96 max-w-full">
             <motion.div
               style={{ opacity: prompt1Opacity }}
-              className="absolute inset-0 flex items-center justify-center gap-2 pointer-events-none"
+              className="absolute inset-0 flex items-center justify-center gap-2 pointer-events-none whitespace-nowrap"
             >
               <span>SCROLL TO LIFT DEVICE</span>
               <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
             </motion.div>
             <motion.div
               style={{ opacity: prompt2Opacity }}
-              className="absolute inset-0 flex items-center justify-center gap-2 pointer-events-none"
+              className="absolute inset-0 flex items-center justify-center gap-2 pointer-events-none whitespace-nowrap"
             >
               <span>SCROLL TO LAY FLAT</span>
               <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
             </motion.div>
             <motion.div
               style={{ opacity: prompt3Opacity }}
-              className="absolute inset-0 flex items-center justify-center gap-2 text-[#ff8539] pointer-events-none"
+              className="absolute inset-0 flex items-center justify-center gap-2 pointer-events-none whitespace-nowrap"
             >
-              <span>STAGE 03 // ARCHITECTURE</span>
+              <span>SCROLL TO EXPLODE ARCHITECTURE</span>
               <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
+            </motion.div>
+            <motion.div
+              style={{ opacity: prompt4Opacity }}
+              className="absolute inset-0 flex items-center justify-center gap-2 text-[#ff8539] pointer-events-none whitespace-nowrap"
+            >
+              <span>STAGE 02 // 6-LAYER ARCHITECTURE [ EXPLODED ]</span>
+              <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
+            </motion.div>
+            <motion.div
+              style={{ opacity: prompt5Opacity }}
+              className="absolute inset-0 flex items-center justify-center gap-2 text-[#38bdf8] pointer-events-none whitespace-nowrap"
+            >
+              <span>STAGE 03 // CORE CAPABILITIES</span>
+              <ArrowDown className="w-3 h-3 text-[#38bdf8] animate-bounce" />
             </motion.div>
           </div>
 
@@ -738,6 +1033,9 @@ export function HeroToDeviceChoreography({
           </div>
         </div>
       </div>
+
+      {/* Anchor for Stage 2 Detection in Global Stage Indicator */}
+      <div id="stage-2" className="absolute top-[52%] pointer-events-none" />
     </div>
   );
 }
