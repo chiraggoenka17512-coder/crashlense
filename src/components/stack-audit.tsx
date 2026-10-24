@@ -1,116 +1,144 @@
 "use client";
 
 import React from "react";
-import { AlertTriangle, CheckCircle, ShieldAlert, Cpu, Sparkles, Database } from "lucide-react";
+import { FileText, CheckCircle2 } from "lucide-react";
+
+interface ADRRecord {
+  id: string;
+  title: string;
+  verdict: "CRITICAL GUARD" | "PERFORMANCE WIN" | "STRATEGIC SCOPE" | "DEPLOYMENT WIN";
+  verdictColor: string;
+  problem: string;
+  resolution: string;
+  fileHint: string;
+}
+
+const ADRS: ADRRecord[] = [
+  {
+    id: "ADR-001",
+    title: "The Clerk vs. Supabase RLS Conflict",
+    verdict: "CRITICAL GUARD",
+    verdictColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+    problem:
+      "Supabase defaults to Row Level Security (RLS) linked to its native auth. Using Clerk for auth while querying Supabase through the JS client requires configuring custom JWT templates, signing keys, and claims sync. Debugging RLS 403 Forbidden errors mid-hackathon routinely burns 3-4 hours.",
+    resolution:
+      "Use Clerk strictly for frontend auth (<SignInButton />, JWT sessions, cookies) and connect to Supabase PostgreSQL directly through Drizzle ORM. Drizzle connects with the database user over port 6543, completely sidestepping RLS token syncing while maintaining server-side security.",
+    fileHint: "src/db/index.ts",
+  },
+  {
+    id: "ADR-002",
+    title: "Drizzle ORM vs. Prisma Schema Locks",
+    verdict: "PERFORMANCE WIN",
+    verdictColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+    problem:
+      "Prisma relies on native Rust engine binaries (generating heavy bundle sizes and cold-start latency spikes on Vercel) and enforces strict migration histories that conflict when team members branch schema changes simultaneously.",
+    resolution:
+      "Drizzle is pure TypeScript with zero binary dependencies. When the Sunday problem statement drops, schema changes sync in 1.2s via 'npm run db:push' without generating cumbersome SQL migration files or blocking branch merges.",
+    fileHint: "src/db/schema.ts",
+  },
+  {
+    id: "ADR-003",
+    title: "Upstash Redis: Scoped Rate Limiting",
+    verdict: "STRATEGIC SCOPE",
+    verdictColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+    problem:
+      "Over-engineering state by mirroring relational data into Redis adds synchronization debt and cache-invalidation bugs under timed hackathon pressure.",
+    resolution:
+      "Reserve Upstash Redis strictly for: (1) Sliding-window rate limiting on LLM/agent endpoints to prevent runaway OpenAI/Gemini spend, and (2) Real-time session locks. Our redis.ts includes an automatic in-memory mock fallback so missing keys never halt deployments.",
+    fileHint: "src/lib/redis.ts",
+  },
+  {
+    id: "ADR-004",
+    title: "Supabase Transaction Pooler on Vercel",
+    verdict: "DEPLOYMENT WIN",
+    verdictColor: "text-sky-400 bg-sky-500/10 border-sky-500/20",
+    problem:
+      "Serverless Vercel lambdas scale down to zero and spawn dozens of ephemeral instances under load. Direct Postgres port 5432 connections quickly exhaust the database max_connections limit.",
+    resolution:
+      "Always connect via the Supabase AWS Transaction Pooler (port 6543) with 'prepare: false' configured in the postgres driver. This allows unlimited concurrent serverless functions without connection exhaustion.",
+    fileHint: "src/db/index.ts:17",
+  },
+];
 
 export function StackAudit() {
   return (
-    <section id="stack-audit" className="py-16 border-t border-white/[0.08] relative">
+    <section id="stack-audit" className="py-20 border-t border-white/[0.07] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-3">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            Hackathon Engineering Advisory
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-neutral-300 text-xs font-mono mb-3">
+              <FileText className="w-3.5 h-3.5 text-indigo-400" />
+              <span>ARCHITECTURAL DECISION RECORDS</span>
+            </div>
+            <h2 className="font-[family-name:var(--font-display)] text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Engineering Review & Hackathon Friction Analysis
+            </h2>
+            <p className="text-sm text-neutral-400 mt-2 max-w-2xl leading-relaxed">
+              A candid architectural breakdown of our chosen stack: four common hackathon traps, why they derail teams, and how this starter is pre-wired to bypass them.
+            </p>
           </div>
-          <h2 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
-            Critical Architecture Review: What to Watch Out For
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-neutral-400">
-            A brutally honest breakdown of your chosen stack for a 24-48h hackathon: traps to avoid and how we wired it to prevent friction.
-          </p>
+
+          <div className="flex items-center gap-2 font-mono text-xs text-neutral-400">
+            <span>4 Records Committed</span>
+            <span className="h-3 w-px bg-white/10" />
+            <span className="text-emerald-400">Zero Unresolved Traps</span>
+          </div>
         </div>
 
+        {/* ADR Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Critique 1: Clerk vs Supabase Auth */}
-          <div className="glass-panel rounded-2xl p-6 border-l-4 border-l-amber-500">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
-                <ShieldAlert className="w-5 h-5" />
-              </div>
+          {ADRS.map((adr) => (
+            <div
+              key={adr.id}
+              className="tactile-panel-interactive rounded-2xl p-6 flex flex-col justify-between"
+            >
               <div>
-                <h3 className="text-base font-bold text-white">The Clerk + Supabase RLS Trap</h3>
-                <span className="text-xs font-mono text-amber-400">High Risk of Wasted Hackathon Hours</span>
-              </div>
-            </div>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">
-              <strong>The Problem:</strong> Supabase has its own built-in authentication with Row Level Security (RLS). If you authenticate users with Clerk and attempt to use Supabase RLS policies via the Supabase client, you must configure Clerk JWT templates, public keys, and custom headers. During a hackathon, debugging JWT sync mismatches or 403 Forbidden errors can burn 4+ hours.
-            </p>
-            <div className="p-3 rounded-xl bg-black/50 border border-white/5 text-xs text-neutral-300 space-y-1">
-              <span className="text-indigo-400 font-semibold block">✓ How this starter solves it:</span>
-              <span>
-                Use <strong>Clerk</strong> for frontend Auth UI (<code className="text-pink-400">&lt;SignInButton /&gt;</code>, user profiles) and treat <strong>Supabase</strong> strictly as high-speed PostgreSQL via <strong>Drizzle ORM</strong>. Drizzle executes queries over the direct connection string, completely bypassing RLS headaches!
-              </span>
-            </div>
-          </div>
+                {/* Header */}
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-mono text-xs font-bold text-neutral-400">{adr.id}</span>
+                  <span
+                    className={`font-mono text-[10px] uppercase font-semibold px-2 py-0.5 rounded border ${adr.verdictColor}`}
+                  >
+                    {adr.verdict}
+                  </span>
+                </div>
 
-          {/* Critique 2: Drizzle ORM Speed Advantage */}
-          <div className="glass-panel rounded-2xl p-6 border-l-4 border-l-emerald-500">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
-                <Database className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-white">Drizzle ORM: 10/10 Hackathon Choice</h3>
-                <span className="text-xs font-mono text-emerald-400">Superior to Prisma for Timed Events</span>
-              </div>
-            </div>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">
-              <strong>The Advantage:</strong> Prisma requires Rust engine binary generation (<code className="text-pink-400">npx prisma generate</code>), can cause cold-start latency spikes on Vercel serverless, and strict migration locks. In contrast, Drizzle is pure TypeScript with instant <code className="text-indigo-400">npm run db:push</code>.
-            </p>
-            <div className="p-3 rounded-xl bg-black/50 border border-white/5 text-xs text-neutral-300 space-y-1">
-              <span className="text-emerald-400 font-semibold block">✓ Instant iteration workflow:</span>
-              <span>
-                Edit <code className="text-indigo-300">src/db/schema.ts</code> and immediately run <code className="text-emerald-300">npm run db:push</code>. Supabase tables update in 1.2 seconds without creating cumbersome SQL migration files.
-              </span>
-            </div>
-          </div>
+                <h3 className="text-base font-bold text-white tracking-tight mb-3">
+                  {adr.title}
+                </h3>
 
-          {/* Critique 3: Upstash Redis - Necessity vs Overhead */}
-          <div className="glass-panel rounded-2xl p-6 border-l-4 border-l-purple-500">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
-                <Cpu className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-white">Upstash Redis: Strategic Use Only</h3>
-                <span className="text-xs font-mono text-purple-400">Great for AI Limiting, Overkill for CRUD</span>
-              </div>
-            </div>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">
-              <strong>The Nuance:</strong> Do not use Redis for relational data that PostgreSQL already stores. Use Upstash specifically for:
-              (1) <strong>API Rate Limiting</strong> on costly LLM/OpenAI calls,
-              (2) <strong>Leaderboard caching</strong>, or
-              (3) <strong>Fast agent memory/session state</strong>.
-            </p>
-            <div className="p-3 rounded-xl bg-black/50 border border-white/5 text-xs text-neutral-300 space-y-1">
-              <span className="text-purple-400 font-semibold block">✓ Resilient Fallback Built-in:</span>
-              <span>
-                Our <code className="text-indigo-300">src/lib/redis.ts</code> includes an automatic in-memory mock. Your app will NOT crash on deployment if Upstash keys are pending!
-              </span>
-            </div>
-          </div>
+                {/* Problem Breakdown */}
+                <div className="mb-4">
+                  <span className="text-[11px] font-mono uppercase text-neutral-400 tracking-wider block mb-1">
+                    The Trap:
+                  </span>
+                  <p className="text-xs text-neutral-300 leading-relaxed">
+                    {adr.problem}
+                  </p>
+                </div>
 
-          {/* Critique 4: Vercel + Next.js App Router */}
-          <div className="glass-panel rounded-2xl p-6 border-l-4 border-l-indigo-500">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400">
-                <Sparkles className="w-5 h-5" />
+                {/* Solution */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-4">
+                  <span className="text-[11px] font-mono uppercase text-emerald-400 tracking-wider block mb-1 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3 h-3" />
+                    How this template handles it:
+                  </span>
+                  <p className="text-xs text-neutral-300 leading-relaxed">
+                    {adr.resolution}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-white">Vercel: The Pitch-Winning Secret</h3>
-                <span className="text-xs font-mono text-indigo-400">Instant Demo Links for Judges</span>
+
+              {/* Footer File Link */}
+              <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-neutral-400">
+                <span>Wiring Reference:</span>
+                <code className="text-neutral-200 bg-white/[0.05] px-2 py-0.5 rounded border border-white/[0.08]">
+                  {adr.fileHint}
+                </code>
               </div>
             </div>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">
-              <strong>The Power:</strong> In hackathons, judges test links on mobile and laptops simultaneously. Deploying on Vercel with automatic Git branch previews guarantees that you never have to scramble with Docker, ports, or Nginx at 8:00 AM on demo morning.
-            </p>
-            <div className="p-3 rounded-xl bg-black/50 border border-white/5 text-xs text-neutral-300 space-y-1">
-              <span className="text-indigo-400 font-semibold block">✓ Pro Tip for Orcathon 2026:</span>
-              <span>
-                Set all your environment variables in Vercel Project Settings ahead of time so every <code className="text-indigo-300">git push</code> immediately updates your live submission URL.
-              </span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

@@ -2,43 +2,76 @@
 
 import React from "react";
 import Link from "next/link";
-import { Sparkles, Terminal } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-white/[0.08] bg-[#07080c] py-12 text-neutral-400">
+    <footer className="w-full border-t border-[rgba(255,237,214,0.08)] bg-[#07080a] py-12 text-[#94a3b8]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-8 border-b border-[rgba(255,237,214,0.06)]">
+          {/* Logo & Manifesto */}
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-0.5">
-              <div className="h-full w-full bg-[#07080c] rounded-[6px] flex items-center justify-center">
-                <Sparkles className="h-3.5 w-3.5 text-indigo-400" />
-              </div>
+            <div className="h-8 w-8 rounded-lg bg-[#12151c] border border-[rgba(255,237,214,0.12)] flex items-center justify-center font-mono text-xs font-bold text-[#ffedd6] shadow-[inset_0_1px_0_rgba(255,237,214,0.15)]">
+              OR
             </div>
             <div>
-              <p className="text-sm font-bold text-white tracking-wide">Orcathon 2026 Engine</p>
-              <p className="text-xs text-neutral-400">Next.js 16 • Supabase • Clerk • Drizzle • Upstash</p>
+              <p className="text-xs font-bold text-[#f4efe6] tracking-tight uppercase font-[family-name:var(--font-display)]">
+                Orcathon 2026 // Weapon-Grade OS
+              </p>
+              <p className="text-[11px] font-mono text-[#94a3b8]">
+                Benchmarked against Oryzo.ai · Built for high-stakes problem resolution
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-6 text-xs text-neutral-300">
-            <Link href="/api/health" target="_blank" className="hover:text-white transition-colors flex items-center gap-1">
-              <Terminal className="w-3.5 h-3.5 text-indigo-400" />
-              <span>/api/health</span>
+          {/* Navigation Links */}
+          <div className="flex flex-wrap items-center gap-6 text-xs font-mono">
+            <Link href="/" className="hover:text-[#ffedd6] transition-colors">
+              Overview
             </Link>
-            <Link href="/api/db-check" target="_blank" className="hover:text-white transition-colors flex items-center gap-1">
-              <span>/api/db-check</span>
+            <Link href="/workbench" className="hover:text-[#ffedd6] transition-colors">
+              3D Workbench
             </Link>
-            <Link href="/api/redis-check" target="_blank" className="hover:text-white transition-colors flex items-center gap-1">
-              <span>/api/redis-check</span>
+            <Link href="/dashboard" className="hover:text-[#ffedd6] transition-colors">
+              Dashboard
+            </Link>
+            <Link href="/telemetry" className="hover:text-[#ffedd6] transition-colors">
+              Telemetry
+            </Link>
+            <Link href="/specs" className="hover:text-[#ffedd6] transition-colors">
+              Specs & Tracks
             </Link>
           </div>
+        </div>
 
-          <div className="text-xs text-neutral-400">
-            <span>Ready for Sunday Hackathon Submission</span>
+        {/* Bottom Sub-footer */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-[#64748b] gap-4">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>EDGE FLEET 100% OPERATIONAL</span>
+            </span>
+            <span>•</span>
+            <span>DRAC0-GLTF V2</span>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <Link href="/api/health" target="_blank" className="hover:text-[#ffedd6] transition-colors">
+              /api/health
+            </Link>
+            <a
+              href="https://github.com/chiraggoenka17512-coder/orcathon-2026"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#ffedd6] transition-colors flex items-center gap-1"
+            >
+              <span>GitHub</span>
+              <ArrowUpRight className="w-3 h-3" />
+            </a>
           </div>
         </div>
       </div>
     </footer>
   );
 }
+export default Footer;

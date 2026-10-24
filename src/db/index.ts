@@ -6,7 +6,6 @@ const connectionString = process.env.DATABASE_URL;
 
 // Singleton pattern for database client in development/serverless
 declare global {
-  // eslint-disable-next-line no-var
   var __postgres_client__: postgres.Sql | undefined;
 }
 

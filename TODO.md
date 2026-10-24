@@ -7,6 +7,13 @@
   - Repo URL: [https://github.com/chiraggoenka17512-coder/orcathon-2026](https://github.com/chiraggoenka17512-coder/orcathon-2026)
   - Branch `main` up to date with initial commits.
 - [x] **Live Health Endpoints**: `/api/health`, `/api/db-check`, `/api/redis-check`.
+- [x] **3D Asset Specification & Binary Model Built**:
+  - Generated photorealistic 3D device binary [public/models/orcathon_device.glb](file:///c:/Users/Chirag/Desktop/Orcathon/public/models/orcathon_device.glb) via headless Blender 5.2.0 LTS.
+  - Draco-compressed to **20.6 KB** (well within < 2.5 MB constraint).
+  - Node hierarchy strictly matching: `Root_Device`, `Chassis_Frame`, `Back_Plate`, `Camera_Island`, `Screen_OLED`, `Screen_Glass_Cover`.
+  - Certified `Screen_OLED` non-inverted UV mapping `(0,0)` to `(1,1)` for runtime HTML5/Next.js dynamic canvas texture projection.
+  - Three.js WebGL canvas built at [src/components/canvas/DeviceModelCanvas.tsx](file:///c:/Users/Chirag/Desktop/Orcathon/src/components/canvas/DeviceModelCanvas.tsx) with GLTF/DRACO loader, procedural titanium fallback, dynamic OLED screen texture, and 180° flip mechanics.
+  - Act 4 "Smart Flip" cutting-mat architecture workbench mounted in [src/components/smart-flip/SmartFlipWorkbench.tsx](file:///c:/Users/Chirag/Desktop/Orcathon/src/components/smart-flip/SmartFlipWorkbench.tsx).
 
 ---
 

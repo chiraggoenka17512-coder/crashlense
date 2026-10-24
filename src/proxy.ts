@@ -13,6 +13,8 @@ const isPublicRoute = createRouteMatcher([
   "/api/redis-check",
   "/sign-in(.*)",
   "/sign-up(.*)",
+  "/models/(.*)",
+  "/(.*)\\.glb",
 ]);
 
 const middleware = hasClerkKeys
@@ -27,7 +29,7 @@ export default middleware;
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|glb|gltf|bin)).*)",
     "/(api|trpc)(.*)",
   ],
 };
