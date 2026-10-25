@@ -124,7 +124,7 @@ export function DeviceFrame({
               </div>
             </div>
 
-            {/* SCREEN MAIN BODY: ORCATHON 2026 LIVE APP HUD */}
+            {/* SCREEN MAIN BODY: CRASHLENS 2026 LIVE APP HUD */}
             <div className="relative z-20 px-3 sm:px-3.5 pt-1.5 sm:pt-2 pb-1 space-y-1.5 sm:space-y-2">
               {/* Top Banner & Product Title */}
               <div>

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, Cpu, ShieldCheck } from "lucide-react";
 
 export const metadata = {
-  title: "3D Architecture Workbench | Orcathon 2026",
+  title: "3D Architecture Workbench | CrashLens 2026",
   description:
     "Physical CAD cutting mat stage featuring the photorealistic Apple iPhone 16 Pro 3D centerpiece with 180° flip telemetry mechanics.",
 };

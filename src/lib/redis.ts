@@ -25,7 +25,7 @@ export const ratelimit = redis
       redis,
       limiter: Ratelimit.slidingWindow(10, "10 s"),
       analytics: true,
-      prefix: "orcathon:ratelimit",
+      prefix: "crashlens:ratelimit",
     })
   : null;
 

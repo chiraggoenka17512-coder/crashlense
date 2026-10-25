@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import { AuthProvider } from "@/components/auth-provider";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import "./globals.css";
 
@@ -32,14 +32,14 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Orcathon 2026 | Next.js + Supabase + Clerk + Drizzle + Upstash Starter",
+  title: "CrashLens // Predictive Failure Radar & Distributed Chaos Sandbox",
   description:
-    "Production-grade, rapid-iteration hackathon boilerplate pre-configured with Next.js, Supabase, Clerk, Drizzle ORM, and Upstash Redis.",
+    "Predicting catastrophic distributed microservice failures 45 seconds before SLAs breach with sub-350ms root cause diagnosis.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Orcathon",
+    title: "CrashLens",
   },
 };
 
@@ -49,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <AuthProvider>
       <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} dark antialiased`}>
         <body className="min-h-dvh bg-[#08090d] text-[#f1f5f9] flex flex-col relative selection:bg-amber-400/20 selection:text-[#ffedd6]">
           <SmoothScrollProvider>
@@ -57,6 +57,6 @@ export default function RootLayout({
           </SmoothScrollProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </AuthProvider>
   );
 }

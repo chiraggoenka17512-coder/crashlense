@@ -13,7 +13,7 @@ export async function GET() {
 
   return NextResponse.json({
     status: "ok",
-    appName: "Orcathon 2026 Engine",
+    appName: "CrashLens 2026 Engine",
     timestamp: new Date().toISOString(),
     nodeVersion: process.version,
     environment: process.env.NODE_ENV || "development",

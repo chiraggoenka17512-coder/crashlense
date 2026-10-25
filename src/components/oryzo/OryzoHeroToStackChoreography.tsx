@@ -85,13 +85,13 @@ export const STACK_LAYERS: StackLayer[] = [
   },
   {
     id: 6,
-    name: "Titanium Chassis Frame",
-    badge: "LAYER 06 // CHASSIS",
-    caption: "Grade-5 titanium chassis engineered for on-device execution.",
+    name: "Reflex AI Decision Engine",
+    badge: "LAYER 06 // REFLEX AI",
+    caption: "Sub-350ms root-cause intelligence fusing Mercury and LFM.",
     color: "#ff8539",
-    tech: "Apple Grade 5 Titanium",
-    telemetry: "CNC MILLED A3106",
-    metric: "Δt = 0.85MM",
+    tech: "OpenRouter Dual-Model Reflex",
+    telemetry: "MERCURY + LFM-2.5",
+    metric: "< 350MS RCA",
   },
 ];
 
@@ -313,18 +313,18 @@ export function OryzoHeroToStackChoreography({
           {/* Bottom-Left Frosted Glass Card */}
           <div className="absolute left-6 sm:left-12 top-[60vh] hidden md:block max-w-[260px] p-4 rounded-2xl bg-[#1d1915]/85 backdrop-blur-xl border border-[rgba(255,237,214,0.16)] shadow-2xl text-[#f4efe6]">
             <h3 className="font-[family-name:var(--font-display)] font-black text-xs uppercase leading-snug text-[#ffedd6] mb-1.5">
-              BUILT FOR ORCATHON 2026,<br />THE HIGH-STAKES APP ARENA.
+              CRASHLENS // RADAR OS,<br />PREDICTIVE CHAOS SANDBOX.
             </h3>
             <div className="w-full border-b border-dotted border-[rgba(255,237,214,0.25)] my-1.5" />
             <p className="font-mono text-[10px] text-[#94a3b8] leading-relaxed">
-              Scroll down to lift the device and explode its full architectural stack.
+              Predicting catastrophic distributed microservice cascades 45s before SLAs breach.
             </p>
           </div>
 
           {/* Bottom-Right Editorial Copy & CTA */}
           <div className="absolute right-6 sm:right-12 top-[60vh] hidden lg:flex flex-col items-end gap-2 max-w-[270px] text-right">
             <p className="font-sans text-[11px] text-[#ffedd6] font-medium leading-relaxed drop-shadow-md">
-              Designed to ingest, compute, and resolve in sub-15ms. Orcathon makes the most complex problem feel effortless.
+              Sub-350ms root cause diagnosis via System 1 Reflex Inception. Zero panic, pre-failure interception.
             </p>
             <button
               onClick={onTryItNow}
@@ -336,10 +336,10 @@ export function OryzoHeroToStackChoreography({
               <div className="flex flex-col text-left">
                 <span className="font-mono text-[8px] text-[#ff8539] font-bold tracking-widest uppercase flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                  ORCATHON PLAY
+                  CRASHLENS RADAR
                 </span>
                 <span className="font-[family-name:var(--font-display)] font-bold text-[10.5px] text-[#f4efe6]">
-                  Launch App Playground →
+                  Launch Failure Playground →
                 </span>
               </div>
             </button>
@@ -409,7 +409,7 @@ export function OryzoHeroToStackChoreography({
                   />
 
                   {/* ----------------------------------------------------------------- */}
-                  {/* LAYER 06: GRADE-5 TITANIUM CHASSIS FRAME (BASE / BOTTOM) */}
+                  {/* LAYER 06: OPENROUTER REFLEX AI ENGINE (BASE / BOTTOM) */}
                   {/* ----------------------------------------------------------------- */}
                   <motion.div
                     style={{
@@ -418,41 +418,37 @@ export function OryzoHeroToStackChoreography({
                       transformStyle: "preserve-3d",
                     }}
                     onClick={() => setManualOverrideLayer(6)}
-                    className={`absolute inset-0 rounded-[50px] p-[3px] bg-gradient-to-b from-[#404352] via-[#22242d] to-[#14151b] shadow-2xl transition-all cursor-pointer ${
+                    className={`absolute inset-0 rounded-[50px] p-[3px] bg-gradient-to-b from-[#2a170d] via-[#1a0f08] to-[#0d0704] shadow-2xl transition-all cursor-pointer ${
                       effectiveActiveLayer === 6
                         ? "ring-2 ring-[#ff8539] shadow-[0_0_35px_rgba(255,133,57,0.5)] opacity-100"
                         : "opacity-60 hover:opacity-100"
                     }`}
                   >
-                    <div className="relative w-full h-full rounded-[47px] bg-[#101217] p-5 flex flex-col justify-between overflow-hidden border border-white/[0.08]">
-                      {/* Triple Camera Plateau */}
-                      <div className="relative w-24 h-24 rounded-3xl bg-[#161820] border border-white/[0.12] p-2 flex flex-wrap gap-1.5 items-center justify-center">
-                        <div className="w-8 h-8 rounded-full bg-[#0a0c10] border-2 border-[#2b2e3b] relative flex items-center justify-center">
-                          <span className="w-3 h-3 rounded-full bg-sky-950/80" />
-                          <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-white/40" />
+                    <div className="relative w-full h-full rounded-[47px] bg-[#0c0908] p-5 flex flex-col justify-between overflow-hidden border border-[#ff8539]/25">
+                      {/* Dual AI Neural Core Plateau */}
+                      <div className="relative w-full p-2.5 rounded-2xl bg-black/75 border border-[#ff8539]/25 space-y-1.5">
+                        <div className="flex items-center justify-between text-[7.5px] font-mono text-[#ff8539]">
+                          <span className="font-bold">MERCURY-DECIDE</span>
+                          <span className="text-emerald-400 font-bold">&lt; 350MS RCA</span>
                         </div>
-                        <div className="w-8 h-8 rounded-full bg-[#0a0c10] border-2 border-[#2b2e3b] relative flex items-center justify-center">
-                          <span className="w-3 h-3 rounded-full bg-sky-950/80" />
-                          <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-white/40" />
-                        </div>
-                        <div className="w-8 h-8 rounded-full bg-[#0a0c10] border-2 border-[#2b2e3b] relative flex items-center justify-center">
-                          <span className="w-3 h-3 rounded-full bg-sky-950/80" />
-                          <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-white/40" />
+                        <div className="flex items-center justify-between text-[7.5px] font-mono text-[#ffedd6]">
+                          <span>LFM-2.5 DEEP AUDIT</span>
+                          <span className="text-[#ff8539]">BYOK KEY READY</span>
                         </div>
                       </div>
 
                       <div className="text-center font-mono space-y-1">
                         <div className="text-[9px] text-[#ff8539] font-bold tracking-widest uppercase">
-                          APPLE GRADE-5 TITANIUM
+                          OPENROUTER DUAL-MODEL REFLEX
                         </div>
                         <div className="text-[7.5px] text-[#94a3b8]">
-                          CNC MILLED // ON-DEVICE EXECUTION
+                          SUB-350MS INCIDENT ROOT CAUSE PREDICTION
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between font-mono text-[8px] text-[#94a3b8] border-t border-white/10 pt-2">
-                        <span>MODEL: A3106</span>
-                        <span className="text-[#ffedd6]">Δt = 0.85mm</span>
+                      <div className="flex items-center justify-between font-mono text-[8px] text-[#94a3b8] border-t border-[#ff8539]/20 pt-2">
+                        <span>MODEL: MERCURY+LFM</span>
+                        <span className="text-[#ffedd6]">LATENCY &lt; 350MS</span>
                       </div>
                     </div>
                   </motion.div>

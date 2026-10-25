@@ -82,8 +82,8 @@ export function SmartFlipWorkbench() {
               <DeviceModelCanvas
                 isFlipped={isFlipped}
                 onFlipToggle={() => setIsFlipped((prev) => !prev)}
-                problemTitle="RESOLVING THE UNRESOLVED"
-                problemCategory="ORCATHON 2026"
+                problemTitle="PREDICTIVE FAILURE RADAR"
+                problemCategory="CRASHLENS 2026"
                 className="h-full min-h-[440px]"
               />
 

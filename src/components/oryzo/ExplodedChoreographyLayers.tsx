@@ -11,6 +11,7 @@ import {
   Database,
   Cpu,
   Zap,
+  Sparkles,
 } from "lucide-react";
 
 export interface StackLayer {
@@ -35,111 +36,111 @@ export interface StackLayer {
 export const STACK_LAYERS: StackLayer[] = [
   {
     id: 1,
-    name: "Front OLED Interface",
-    badge: "LAYER 01 // UI ENGINE",
-    caption: "Fluid, responsive problem solver HUD running at 60fps with integrated Dynamic Island signals.",
+    name: "Failure Radar OLED HUD",
+    badge: "LAYER 01 // RADAR HUD",
+    caption: "Real-time 12-node topology DAG with live percolation risk and 45s pre-failure horizon.",
     color: "#ffedd6",
     accentBorder: "border-[#ffedd6]",
     accentBg: "bg-[#ffedd6]/10",
     tech: "Next.js 16 + React 19",
-    telemetry: "60 FPS VECTOR HUD",
-    metric: "12MS P99",
-    bigTitle1: "FRONT OLED",
-    bigTitle2: "INTERFACE",
+    telemetry: "60 FPS RADAR HUD",
+    metric: "45S HORIZON",
+    bigTitle1: "FAILURE RADAR",
+    bigTitle2: "OLED HUD",
     bigTech1: "NEXT.JS 16",
     bigTech2: "+ REACT 19",
-    implementationDetail: "Client-side vector HUD compiled via Turbopack with React 19 concurrent transitions and zero-hydration jank.",
-    highlights: ["60 FPS VECTOR HUD", "DYNAMIC ISLAND READY", "ZERO-JANK TRANSITIONS"],
+    implementationDetail: "Client-side radar HUD compiled via Turbopack with React 19 concurrent transitions and zero-hydration jank.",
+    highlights: ["45S HORIZON", "12-NODE TOPOLOGY DAG", "ZERO-JANK TRANSITIONS"],
   },
   {
     id: 2,
-    name: "3D Spatial Graphics",
-    badge: "LAYER 02 // GRAPHICS ENGINE",
-    caption: "Real-time WebGL CAD wireframes with physical PBR lighting and 120 FPS camera crane physics.",
+    name: "3D Spatial Graph Canvas",
+    badge: "LAYER 02 // TOPOLOGY ENGINE",
+    caption: "Hardware-accelerated 3D directed acyclic graph mapping 12 microservices with live latency springs.",
     color: "#38bdf8",
     accentBorder: "border-[#38bdf8]",
     accentBg: "bg-[#38bdf8]/10",
     tech: "Three.js + Draco GLTF",
-    telemetry: "DRACO DECOMPRESSOR",
-    metric: "60 FPS PBR",
-    bigTitle1: "3D SPATIAL",
-    bigTitle2: "GRAPHICS",
+    telemetry: "12-NODE DAG RUNTIME",
+    metric: "120 FPS PBR",
+    bigTitle1: "3D TOPOLOGY",
+    bigTitle2: "GRAPH CANVAS",
     bigTech1: "THREE.JS",
     bigTech2: "+ DRACO GLTF",
-    implementationDetail: "Hardware-accelerated Three.js canvas executing 8:1 Draco geometric decompression on modern WebGL2 contexts.",
-    highlights: ["DRACO 8:1 COMPRESSION", "PBR CAD WIREFRAME", "HARDWARE ACCELERATED"],
+    implementationDetail: "Hardware-accelerated Three.js canvas executing real-time spatial graph layout with Draco decompression.",
+    highlights: ["12-NODE DAG RUNTIME", "REAL-TIME SPRINGS", "HARDWARE ACCELERATED"],
   },
   {
     id: 3,
-    name: "Edge Security Shield",
-    badge: "LAYER 03 // SECURITY SHIELD",
-    caption: "Instant biometric edge perimeter with cryptographic JWT token verification and zero wait.",
+    name: "Clerk Edge Auth Perimeter",
+    badge: "LAYER 03 // AUTH GUARD RAIL",
+    caption: "Instant edge authentication, JWT session verification, and multi-tenant RBAC security rail.",
     color: "#a855f7",
     accentBorder: "border-[#a855f7]",
     accentBg: "bg-[#a855f7]/10",
-    tech: "Clerk Edge Auth + TLS 1.3",
+    tech: "Clerk Auth + Session Rail",
     telemetry: "JWT CLAIMS SYNC",
-    metric: "ZERO-WAIT",
-    bigTitle1: "EDGE SECURITY",
-    bigTitle2: "SHIELD",
-    bigTech1: "CLERK EDGE",
-    bigTech2: "AUTH + TLS 1.3",
-    implementationDetail: "Sub-millisecond V8 edge middleware intercepting requests with cryptographic token claims and session defense.",
-    highlights: ["ZERO-WAIT SESSIONS", "JWT CLAIMS SYNC", "BIOMETRIC PERIMETER"],
+    metric: "ZERO-WAIT AUTH",
+    bigTitle1: "CLERK EDGE",
+    bigTitle2: "AUTH PERIMETER",
+    bigTech1: "CLERK AUTH",
+    bigTech2: "+ EDGE SESSION RAIL",
+    implementationDetail: "Sub-millisecond edge authentication with zero-friction session hydration, JWT claim exchange, and protected telemetry routes.",
+    highlights: ["ZERO-WAIT AUTH", "JWT CLAIMS SYNC", "MULTI-TENANT RBAC"],
   },
   {
     id: 4,
-    name: "Polymorphic Data Engine",
-    badge: "LAYER 04 // DATA ENGINE",
-    caption: "Sunday track problem schemas executing sub-12ms prepared queries with zero migration drift.",
+    name: "1Hz Ring Buffer Store",
+    badge: "LAYER 04 // COUNTERFACTUAL DATA",
+    caption: "Type-safe Drizzle ORM counterfactual logs comparing saved vs crashed execution paths.",
     color: "#10b981",
     accentBorder: "border-[#10b981]",
     accentBg: "bg-[#10b981]/10",
     tech: "Drizzle ORM + Supabase",
     telemetry: "AWS POOLER 6543",
     metric: "P99 < 12MS",
-    bigTitle1: "POLYMORPHIC",
-    bigTitle2: "DATA ENGINE",
+    bigTitle1: "RING BUFFER",
+    bigTitle2: "DATA STORE",
     bigTech1: "DRIZZLE ORM",
     bigTech2: "+ SUPABASE POOLER",
     implementationDetail: "Type-safe relational schema mapped directly to Supabase PostgreSQL over low-overhead AWS pooling on port 6543.",
-    highlights: ["SUB-12MS P99", "TYPE-SAFE DRIZZLE", "AWS POOLER 6543"],
+    highlights: ["SUB-12MS P99", "SAVED VS CRASHED LOGS", "AWS POOLER 6543"],
   },
   {
     id: 5,
-    name: "Global Memory Cache",
-    badge: "LAYER 05 // MEMORY CACHE",
-    caption: "16-node distributed cluster executing sub-millisecond telemetry cache and rate limiting.",
+    name: "Active Mitigation Bus",
+    badge: "LAYER 05 // FAILOVER BUS",
+    caption: "16-node active mitigation bus executing 3-key pool sheds and breaker trip mutations.",
     color: "#f59e0b",
     accentBorder: "border-[#f59e0b]",
     accentBg: "bg-[#f59e0b]/10",
     tech: "Upstash Redis Cluster",
-    telemetry: "16 SYNCED NODES",
+    telemetry: "12 NODE CHANNELS",
     metric: "10K REQ/SEC",
-    bigTitle1: "GLOBAL MEMORY",
-    bigTitle2: "CACHE",
+    bigTitle1: "ACTIVE MITIGATION",
+    bigTitle2: "FAILOVER BUS",
     bigTech1: "UPSTASH REDIS",
     bigTech2: "16-NODE CLUSTER",
-    implementationDetail: "Serverless REST cache pipeline delivering 10,000 req/sec with automated global edge replication and telemetry ping.",
-    highlights: ["10K REQ/SEC", "16 SYNCED NODES", "SUB-MS TELEMETRY"],
+    implementationDetail: "Serverless REST cache pipeline delivering 10,000 req/sec with automated 3-key circuit breaker failover.",
+    highlights: ["10K REQ/SEC", "3-KEY POOL SHED", "SUB-MS TELEMETRY"],
   },
   {
     id: 6,
-    name: "Titanium Chassis Frame",
-    badge: "LAYER 06 // CHASSIS FRAME",
-    caption: "Aerospace Grade-5 titanium unibody engineered for sustained on-device compute thermal dissipation.",
+    name: "OpenRouter Reflex AI Engine",
+    badge: "LAYER 06 // SYSTEM-1 AI REFLEX",
+    caption: "Sub-350ms root cause analysis fusing Mercury fast reflex and LFM deep reasoning.",
     color: "#ff8539",
     accentBorder: "border-[#ff8539]",
     accentBg: "bg-[#ff8539]/10",
-    tech: "Apple Grade-5 Titanium",
-    telemetry: "CNC MILLED A3106",
-    metric: "Δt = 0.85MM",
-    bigTitle1: "TITANIUM CHASSIS",
-    bigTitle2: "FRAME",
-    bigTech1: "APPLE GRADE-5",
-    bigTech2: "TITANIUM UNIBODY",
-    implementationDetail: "Precision CNC-machined titanium enclosure with triple sapphire camera island plateau and 0.85mm thermal tolerances.",
-    highlights: ["GRADE-5 TITANIUM", "CNC MILLED A3106", "Δt = 0.85MM TOLERANCE"],
+    tech: "OpenRouter Dual-Model Reflex",
+    telemetry: "MERCURY + LFM-2.5",
+    metric: "< 350MS RCA",
+    bigTitle1: "SYSTEM-1",
+    bigTitle2: "REFLEX AI ENGINE",
+    bigTech1: "OPENROUTER",
+    bigTech2: "DUAL-MODEL REFLEX",
+    implementationDetail: "Dual-model intelligence executing inception/mercury-decide (<350ms) with liquid/lfm-2.5-2.6b deep reasoning and dynamic BYOK key injection.",
+    highlights: ["<350MS RCA", "DUAL-MODEL ENSEMBLE", "BYOK KEY INJECTION"],
   },
 ];
 
@@ -148,6 +149,7 @@ interface ExplodedChoreographyLayersProps {
   activeLayerId: number | null;
   onHoverLayer: (id: number | null) => void;
   onOpenPlayground?: () => void;
+  aiGlowOpacity?: MotionValue<number>;
   className?: string;
 }
 
@@ -156,6 +158,7 @@ export function ExplodedChoreographyLayers({
   activeLayerId,
   onHoverLayer,
   onOpenPlayground,
+  aiGlowOpacity,
   className = "",
 }: ExplodedChoreographyLayersProps) {
   // Continuous 120 FPS scroll-driven elevation for each slice along local Z and Y axes
@@ -188,7 +191,7 @@ export function ExplodedChoreographyLayers({
       style={{ transformStyle: "preserve-3d" }}
     >
       {/* ========================================================================= */}
-      {/* LAYER 06: GRADE-5 TITANIUM CHASSIS FRAME (BASE / BOTTOM ANCHOR) */}
+      {/* LAYER 06: OPENROUTER REFLEX AI ENGINE (BASE / AI SUBSTRATE ANCHOR) */}
       {/* ========================================================================= */}
       <motion.div
         style={{
@@ -198,53 +201,64 @@ export function ExplodedChoreographyLayers({
         }}
         onMouseEnter={() => onHoverLayer(6)}
         onMouseLeave={() => onHoverLayer(null)}
-        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2.5px] bg-gradient-to-b from-[#404352] via-[#22242d] to-[#121319] shadow-[0_25px_50px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.4)] transition-all duration-300 cursor-pointer ${
+        className={`absolute inset-0 rounded-[44px] sm:rounded-[48px] lg:rounded-[52px] p-[2.5px] bg-gradient-to-b from-[#2a170d] via-[#1a0f08] to-[#0d0704] shadow-[0_25px_50px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,133,57,0.4)] transition-all duration-300 cursor-pointer ${
           activeLayerId === 6
-            ? "ring-2 ring-[#ff8539] shadow-[0_0_40px_rgba(255,133,57,0.45)] scale-[1.02] opacity-100 z-10"
+            ? "ring-2 ring-[#ff8539] shadow-[0_0_40px_rgba(255,133,57,0.55)] scale-[1.02] opacity-100 z-10"
             : activeLayerId !== null
             ? "opacity-40 brightness-75 hover:opacity-100 hover:brightness-100"
             : "opacity-100"
         }`}
       >
-        <div className="relative w-full h-full rounded-[41px] sm:rounded-[45px] lg:rounded-[49px] bg-[#101217] p-5 flex flex-col justify-between overflow-hidden border border-white/[0.08]">
-          {/* Subtle anisotropic brushed metal sheen */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(255,255,255,0.08),transparent_70%)] pointer-events-none" />
+        <div className="relative w-full h-full rounded-[41px] sm:rounded-[45px] lg:rounded-[49px] bg-[#0c0908] p-5 flex flex-col justify-between overflow-hidden border border-[#ff8539]/25">
+          {/* Subtle neural synaptic glow */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(255,133,57,0.15),transparent_70%)] pointer-events-none" />
 
-          {/* Apple-style Triple Camera Island Plateau */}
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-[#161820] border border-white/[0.12] p-2 sm:p-2.5 shadow-xl flex flex-wrap gap-1.5 sm:gap-2 items-center justify-center">
-            {/* Camera Lens 1 */}
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0a0c10] border-2 border-[#2b2e3b] shadow-inner flex items-center justify-center relative">
-              <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#050608] border border-sky-900/60" />
-              <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full bg-white/40" />
+          {/* Layer Header */}
+          <div className="flex items-center justify-between text-[8px] sm:text-[8.5px] font-mono text-[#ff8539]">
+            <span className="flex items-center gap-1.5 font-bold">
+              <Sparkles className="w-3 h-3 text-[#ff8539] animate-pulse" />
+              LAYER 06 // REFLEX AI
+            </span>
+            <span className="px-1.5 py-0.5 rounded bg-[#ff8539]/20 border border-[#ff8539]/40 text-[7px] sm:text-[7.5px]">
+              OPENROUTER GATEWAY
+            </span>
+          </div>
+
+          {/* Dual AI Neural Core Substrate (Mercury + LFM) */}
+          <div className="relative my-2 p-3 rounded-2xl bg-black/75 border border-[#ff8539]/25 space-y-2.5">
+            {/* Core Alpha: Mercury-Decide */}
+            <div className="flex items-center justify-between p-2 rounded-xl bg-[#1c1109] border border-amber-500/30">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <div className="font-mono text-[8px] font-bold text-[#ffedd6]">MERCURY-DECIDE</div>
+              </div>
+              <span className="font-mono text-[7px] text-emerald-400 font-bold">&lt; 350MS RCA</span>
             </div>
-            {/* Camera Lens 2 */}
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0a0c10] border-2 border-[#2b2e3b] shadow-inner flex items-center justify-center relative">
-              <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#050608] border border-sky-900/60" />
-              <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full bg-white/40" />
+
+            {/* Core Beta: Liquid LFM-2.5 */}
+            <div className="flex items-center justify-between p-2 rounded-xl bg-[#1c1109] border border-[#ff8539]/30">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#ff8539]" />
+                <div className="font-mono text-[8px] font-bold text-[#ffedd6]">LFM-2.5-2.6B</div>
+              </div>
+              <span className="font-mono text-[7px] text-[#ff8539] font-bold">DEEP AUDIT</span>
             </div>
-            {/* Camera Lens 3 */}
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0a0c10] border-2 border-[#2b2e3b] shadow-inner flex items-center justify-center relative">
-              <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#050608] border border-sky-900/60" />
-              <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full bg-white/40" />
-            </div>
-            {/* LiDAR sensor dot */}
-            <div className="w-3 sm:w-3.5 h-3 sm:h-3.5 rounded-full bg-black border border-white/10" />
           </div>
 
           {/* Laser Engraved Specs Center */}
           <div className="text-center font-mono space-y-1">
             <div className="text-[8.5px] sm:text-[9px] text-[#ff8539] font-bold tracking-widest uppercase">
-              APPLE GRADE-5 TITANIUM
+              OPENROUTER DUAL-MODEL REFLEX
             </div>
             <div className="text-[7px] sm:text-[7.5px] text-[#94a3b8] tracking-wider">
-              CNC MILLED CHASSIS // ON-DEVICE EXECUTION
+              FAST-REFLEX INFERENCE // DYNAMIC BYOK KEYS
             </div>
           </div>
 
           {/* Bottom CAD Dimension Caliper */}
-          <div className="flex items-center justify-between font-mono text-[7.5px] sm:text-[8px] text-[#94a3b8]/70 border-t border-white/[0.08] pt-2">
-            <span>MODEL: A3106</span>
-            <span className="text-[#ffedd6]">Δt = 0.85mm</span>
+          <div className="flex items-center justify-between font-mono text-[7.5px] sm:text-[8px] text-[#94a3b8]/70 border-t border-[#ff8539]/20 pt-2">
+            <span>ENGINE: MERCURY + LFM</span>
+            <span className="text-[#ffedd6]">LATENCY &lt; 350MS</span>
           </div>
         </div>
       </motion.div>
@@ -530,6 +544,14 @@ export function ExplodedChoreographyLayers({
             {/* Background Subtle Dot Grid */}
             <div className="absolute inset-0 oryzo-dots opacity-20 pointer-events-none" />
 
+            {/* Subtle Neural Ambient Edge Glow when reassembled */}
+            {aiGlowOpacity && (
+              <motion.div
+                style={{ opacity: aiGlowOpacity }}
+                className="absolute inset-0 z-30 pointer-events-none rounded-[33px] sm:rounded-[37px] shadow-[inset_0_0_28px_rgba(255,133,57,0.2)] border border-[#ff8539]/30"
+              />
+            )}
+
             {/* TOP HEADER: DYNAMIC ISLAND + STATUS BAR */}
             <div className="relative z-20 w-full pt-2.5 px-4 sm:px-5">
               <div className="w-full flex items-center justify-between text-xs font-mono text-[#ffedd6]">
@@ -550,17 +572,17 @@ export function ExplodedChoreographyLayers({
               </div>
             </div>
 
-            {/* SCREEN MAIN BODY: ORCATHON LIVE APP HUD */}
+            {/* SCREEN MAIN BODY: CRASHLENS LIVE RADAR HUD */}
             <div className="relative z-20 px-3 sm:px-3.5 pt-1.5 sm:pt-2 pb-1 space-y-1.5 sm:space-y-2">
               <div>
                 <div className="flex items-center justify-between mb-0.5">
                   <span className="text-[8.5px] font-mono text-[#ff8539] font-bold tracking-wider uppercase flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#ff8539] animate-pulse" />
-                    APP // {SITE_CONFIG.brand.name} OS
+                    RADAR // {SITE_CONFIG.brand.name} OS
                   </span>
                   <span className="flex items-center gap-1 font-mono text-[8px] text-emerald-400 font-semibold">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping" />
-                    LIVE OLED
+                    LIVE RADAR
                   </span>
                 </div>
                 <div className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-white/[0.06] border border-white/[0.1] mb-1">
@@ -577,21 +599,21 @@ export function ExplodedChoreographyLayers({
               {/* Central Telemetry HUD Card */}
               <div className="p-2 sm:p-2.5 rounded-xl bg-[#0f1118]/92 border border-[rgba(255,237,214,0.12)] shadow-md backdrop-blur-md space-y-1 sm:space-y-1.5">
                 <div className="flex items-center justify-between text-[8px] font-mono border-b border-white/[0.06] pb-0.5">
-                  <span className="text-[#94a3b8]">TELEMETRY ENGINE</span>
-                  <span className="text-emerald-400 font-bold">SUB-12MS P99</span>
+                  <span className="text-[#94a3b8]">12-NODE TOPOLOGY ENGINE</span>
+                  <span className="text-emerald-400 font-bold">45S PRE-FAILURE HORIZON</span>
                 </div>
                 <div className="grid grid-cols-3 gap-1.5 text-center">
                   <div className="p-1 sm:p-1.5 rounded-lg bg-black/40 border border-white/[0.05]">
-                    <div className="text-[7.5px] font-mono text-[#94a3b8] uppercase">PING</div>
-                    <div className="text-[11px] font-mono font-bold text-emerald-400">12ms</div>
+                    <div className="text-[7.5px] font-mono text-[#94a3b8] uppercase">PREDICT</div>
+                    <div className="text-[11px] font-mono font-bold text-emerald-400">45s</div>
                   </div>
                   <div className="p-1 sm:p-1.5 rounded-lg bg-black/40 border border-white/[0.05]">
-                    <div className="text-[7.5px] font-mono text-[#94a3b8] uppercase">CACHE</div>
-                    <div className="text-[11px] font-mono font-bold text-[#38bdf8]">99.4%</div>
+                    <div className="text-[7.5px] font-mono text-[#94a3b8] uppercase">REFLEX</div>
+                    <div className="text-[11px] font-mono font-bold text-[#38bdf8]">240ms</div>
                   </div>
                   <div className="p-1 sm:p-1.5 rounded-lg bg-black/40 border border-white/[0.05]">
-                    <div className="text-[7.5px] font-mono text-[#94a3b8] uppercase">DRIZZLE</div>
-                    <div className="text-[11px] font-mono font-bold text-[#ff8539]">POOL</div>
+                    <div className="text-[7.5px] font-mono text-[#94a3b8] uppercase">SURVIVAL</div>
+                    <div className="text-[11px] font-mono font-bold text-[#ff8539]">100%</div>
                   </div>
                 </div>
 
@@ -620,8 +642,8 @@ export function ExplodedChoreographyLayers({
 
                 {/* Console Log Preview */}
                 <div className="p-1.5 rounded bg-black/60 font-mono text-[8px] text-[#94a3b8] truncate">
-                  <span className="text-emerald-400">✓ Ingestion ready: </span>
-                  <span className="text-[#ffedd6]/75">streaming live signals</span>
+                  <span className="text-emerald-400">✓ Anomaly Intercepted: </span>
+                  <span className="text-[#ffedd6]/75">System 1 triggered pool shed on Auth (02)</span>
                 </div>
               </div>
 
@@ -635,7 +657,7 @@ export function ExplodedChoreographyLayers({
                   }}
                   className="w-full py-2 sm:py-2.5 px-3 rounded-xl bg-[#ffedd6] hover:bg-white text-[#07080a] font-mono text-[11px] sm:text-xs font-bold tracking-wider flex items-center justify-center gap-1.5 shadow-[0_3px_14px_rgba(255,237,214,0.35)] transition-all cursor-pointer group"
                 >
-                  <span>RESOLVE STATEMENT</span>
+                  <span>DETONATE CHAOS SCENARIO →</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>

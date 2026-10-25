@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useSpring } from "motion/react";
 import { DeviceFrame } from "@/components/device/DeviceFrame";
 import { CuttingMat } from "@/components/oryzo/CuttingMat";
+import { TactileHardwareProps } from "@/components/oryzo/TactileHardwareProps";
 import { SITE_CONFIG } from "@/config/site-config";
 import {
   ArrowDown,
@@ -24,10 +25,6 @@ export function OryzoHeroDesk({
   onScrollNext,
 }: OryzoHeroDeskProps) {
   const [soundEnabled, setSoundEnabled] = useState(false);
-  const [knifeHovered, setKnifeHovered] = useState(false);
-  const [penHovered, setPenHovered] = useState(false);
-  const [pencilHovered, setPencilHovered] = useState(false);
-  const [clipsHovered, setClipsHovered] = useState(false);
 
   // Mouse parallax springs for spatial studio depth
   const deskRef = useRef<HTMLDivElement>(null);
@@ -120,124 +117,12 @@ export function OryzoHeroDesk({
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. SEPARATE TACTILE CRAFT ITEMS (DISTRIBUTED TO PREVENT ANY CONGESTION) */}
+      {/* 3. CRASHLENS TACTICAL SRE HARDWARE PROPS (YUBIKEY, PCB, SFP+ CABLE, PROBE, RUNBOOK) */}
       {/* ========================================================================= */}
-      <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
-        {/* A. Silver Paper Clips (Upper Left on Japanese Oak Wood) */}
-        <motion.div
-          onMouseEnter={() => {
-            playTactileClick(1500, 0.03);
-            setClipsHovered(true);
-          }}
-          onMouseLeave={() => setClipsHovered(false)}
-          animate={{
-            scale: clipsHovered ? 1.08 : 1,
-            rotate: clipsHovered ? -4 : 0,
-          }}
-          transition={{ type: "spring", stiffness: 350, damping: 20 }}
-          className="absolute left-6 sm:left-12 lg:left-16 top-[28%] w-20 sm:w-26 h-18 sm:h-24 pointer-events-auto cursor-pointer hidden md:block"
-          style={{
-            filter:
-              "drop-shadow(-6px 12px 18px rgba(0,0,0,0.65)) drop-shadow(-2px 4px 6px rgba(0,0,0,0.4))",
-          }}
-          title="Silver Paper Clips"
-        >
-          <Image
-            src="/images/paper_clips_cozy.png"
-            alt="Silver Paper Clips"
-            width={619}
-            height={527}
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
-
-        {/* B. Vintage Cedar Wood Drafting Pencil (Mid-Left on Oak Desk) */}
-        <motion.div
-          onMouseEnter={() => {
-            playTactileClick(550, 0.04);
-            setPencilHovered(true);
-          }}
-          onMouseLeave={() => setPencilHovered(false)}
-          animate={{
-            rotate: pencilHovered ? 26 : 22,
-            scale: pencilHovered ? 1.05 : 1,
-            x: pencilHovered ? 4 : 0,
-          }}
-          transition={{ type: "spring", stiffness: 320, damping: 20 }}
-          className="absolute left-4 sm:left-10 lg:left-14 top-[48%] w-44 sm:w-56 lg:w-64 h-12 sm:h-16 pointer-events-auto cursor-pointer hidden md:block"
-          style={{
-            filter:
-              "drop-shadow(-8px 16px 22px rgba(0,0,0,0.7)) drop-shadow(-2px 4px 6px rgba(0,0,0,0.45))",
-          }}
-          title="Japanese Cedar Wood Drafting Pencil"
-        >
-          <Image
-            src="/images/wood_pencil_cozy.png"
-            alt="Cedar Wood Drafting Pencil"
-            width={917}
-            height={132}
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
-
-        {/* C. Minimalist Japanese Ivory Drafting Pen (Upper Right on Cutting Mat) */}
-        <motion.div
-          onMouseEnter={() => {
-            playTactileClick(750, 0.05);
-            setPenHovered(true);
-          }}
-          onMouseLeave={() => setPenHovered(false)}
-          animate={{
-            rotate: penHovered ? -34 : -38,
-            scale: penHovered ? 1.04 : 1,
-            y: penHovered ? -4 : 0,
-          }}
-          transition={{ type: "spring", stiffness: 350, damping: 20 }}
-          className="absolute right-8 sm:right-16 lg:right-28 top-[18%] sm:top-[20%] w-44 sm:w-56 lg:w-64 h-14 sm:h-18 pointer-events-auto cursor-pointer hidden md:block"
-          style={{
-            filter:
-              "drop-shadow(-10px 18px 26px rgba(0,0,0,0.72)) drop-shadow(-3px 5px 7px rgba(0,0,0,0.45))",
-          }}
-          title="Minimalist Drafting Pen"
-        >
-          <Image
-            src="/images/drafting_pen_cozy.png"
-            alt="Drafting Pen Stylus"
-            width={873}
-            height={144}
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
-
-        {/* D. Japanese Yellow Olfa Utility Cutter Knife (Bottom Right on Cutting Mat) */}
-        <motion.div
-          onMouseEnter={() => {
-            playTactileClick(1200, 0.04);
-            setKnifeHovered(true);
-          }}
-          onMouseLeave={() => setKnifeHovered(false)}
-          animate={{
-            rotate: knifeHovered ? 38 : 34,
-            scale: knifeHovered ? 1.05 : 1,
-            x: knifeHovered ? -4 : 0,
-          }}
-          transition={{ type: "spring", stiffness: 350, damping: 20 }}
-          className="absolute right-4 sm:right-10 lg:right-16 bottom-14 sm:bottom-16 w-40 sm:w-52 lg:w-60 h-22 sm:h-28 pointer-events-auto cursor-pointer hidden sm:block"
-          style={{
-            filter:
-              "drop-shadow(-12px 22px 32px rgba(0,0,0,0.8)) drop-shadow(-3px 6px 9px rgba(0,0,0,0.5))",
-          }}
-          title="Olfa A-1 Utility Knife"
-        >
-          <Image
-            src="/images/olfa_knife_cozy.png"
-            alt="Olfa Utility Knife"
-            width={844}
-            height={245}
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
-      </div>
+      <TactileHardwareProps
+        playTactileClick={playTactileClick}
+        onDetonateScenario={onTryItNow}
+      />
 
       {/* ========================================================================= */}
       {/* 4. HERO BRAND HEADLINE: CLEAN EYEBROW + GIANT ORCATHON TITLE */}
@@ -265,12 +150,12 @@ export function OryzoHeroDesk({
       <div className="absolute left-6 sm:left-12 bottom-11 sm:bottom-12 z-30 pointer-events-auto hidden md:block">
         <div className="max-w-[250px] lg:max-w-[280px] p-3.5 sm:p-4 rounded-2xl bg-[#1d1915]/80 backdrop-blur-xl border border-[rgba(255,237,214,0.16)] shadow-[0_20px_45px_rgba(0,0,0,0.7)] text-[#f4efe6]">
           <h3 className="font-[family-name:var(--font-display)] font-black text-xs sm:text-[12.5px] uppercase leading-snug text-[#ffedd6] mb-1.5">
-            BUILT FOR ORCATHON 2026,<br />
-            THE HIGH-STAKES APP ARENA.
+            CRASHLENS // RADAR OS,<br />
+            PREDICTIVE CHAOS SANDBOX.
           </h3>
           <div className="w-full border-b border-dotted border-[rgba(255,237,214,0.25)] my-1.5" />
           <p className="font-mono text-[10px] text-[#94a3b8] leading-relaxed">
-            The world&apos;s most unnecessarily sophisticated web &amp; mobile problem-solving application.
+            Predicting catastrophic distributed microservice cascades 45s before SLAs breach.
           </p>
         </div>
       </div>
@@ -278,7 +163,7 @@ export function OryzoHeroDesk({
       {/* B. Bottom-Right Editorial Copy & Live Widget (Pinned cleanly above caliper bar) */}
       <div className="absolute right-6 sm:right-12 bottom-11 sm:bottom-12 z-30 pointer-events-auto hidden lg:flex flex-col items-end gap-2 max-w-[270px] text-right">
         <p className="font-sans text-[11px] text-[#ffedd6] font-medium leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
-          Designed to ingest, compute, and resolve in sub-15ms. Orcathon makes the most complex problem feel effortless.
+          Sub-350ms root cause diagnosis via System 1 Reflex Inception. Zero panic, pre-failure interception.
         </p>
         <div
           onClick={onTryItNow}
@@ -290,10 +175,10 @@ export function OryzoHeroDesk({
           <div className="flex flex-col text-left">
             <span className="font-mono text-[8px] text-[#ff8539] font-bold tracking-widest uppercase flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-              ORCATHON PLAY
+              CRASHLENS RADAR
             </span>
             <span className="font-[family-name:var(--font-display)] font-bold text-[10.5px] text-[#f4efe6]">
-              Launch App Playground →
+              Launch Failure Playground →
             </span>
           </div>
         </div>

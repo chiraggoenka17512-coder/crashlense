@@ -12,14 +12,14 @@ export function Footer() {
           {/* Logo & Manifesto */}
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-[#12151c] border border-[rgba(255,237,214,0.12)] flex items-center justify-center font-mono text-xs font-bold text-[#ffedd6] shadow-[inset_0_1px_0_rgba(255,237,214,0.15)]">
-              OR
+              CL
             </div>
             <div>
               <p className="text-xs font-bold text-[#f4efe6] tracking-tight uppercase font-[family-name:var(--font-display)]">
-                Orcathon 2026 // Weapon-Grade OS
+                CrashLens 2026 // Predictive Failure Radar
               </p>
               <p className="text-[11px] font-mono text-[#94a3b8]">
-                Benchmarked against Oryzo.ai · Built for high-stakes problem resolution
+                Tactile craftsmanship · Sub-350ms root cause diagnosis
               </p>
             </div>
           </div>

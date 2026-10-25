@@ -21,7 +21,7 @@ const TRACKS: Record<TrackKey, TrackDefinition> = {
   civic: {
     id: "civic",
     name: "Civic & Health Problem Signals",
-    badge: "Orcathon Dry-Run Stand-In",
+    badge: "CrashLens Distributed Blueprint",
     tagline: "Ranked community signals with telemetry logs, verified impacts, and audit notes.",
     files: [
       {
@@ -297,7 +297,7 @@ export function ProblemAdapter() {
               Interactive Track Inspector
             </h2>
             <p className="text-sm text-neutral-400 mt-2 max-w-2xl leading-relaxed">
-              When the Orcathon problem statement drops on Sunday, switch the track below to inspect ready-to-paste Drizzle schemas, route handlers, and rate limiters.
+              When detonating chaos scenarios, switch the track below to inspect ready-to-paste Drizzle schemas, route handlers, and rate limiters for CrashLens.
             </p>
           </div>
 

@@ -107,7 +107,7 @@ export function ExplodedDeviceStack({
         />
 
         {/* ========================================================================= */}
-        {/* LAYER 06: GRADE-5 TITANIUM CHASSIS FRAME (BASE / BOTTOM) */}
+        {/* LAYER 06: OPENROUTER REFLEX AI ENGINE (BASE / BOTTOM) */}
         {/* ========================================================================= */}
         <motion.div
           animate={getLayerTransform(6)}
@@ -115,50 +115,41 @@ export function ExplodedDeviceStack({
           style={{ transformStyle: "preserve-3d" }}
           onMouseEnter={() => onHoverLayer?.(6)}
           onClick={() => onSelectLayer?.(6)}
-          className={`absolute inset-0 rounded-[50px] p-[3px] bg-gradient-to-b from-[#404352] via-[#22242d] to-[#14151b] shadow-[0_25px_50px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.4)] transition-colors ${
-            activeLayerId === 6 ? "ring-2 ring-[#ff8539] shadow-[0_0_35px_rgba(255,133,57,0.4)]" : ""
+          className={`absolute inset-0 rounded-[50px] p-[3px] bg-gradient-to-b from-[#2a170d] via-[#1a0f08] to-[#0d0704] shadow-[0_25px_50px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,133,57,0.4)] transition-colors ${
+            activeLayerId === 6 ? "ring-2 ring-[#ff8539] shadow-[0_0_35px_rgba(255,133,57,0.5)]" : ""
           }`}
         >
-          {/* Backplate frosted glass surface with camera bump */}
-          <div className="relative w-full h-full rounded-[47px] bg-[#101217] p-5 flex flex-col justify-between overflow-hidden border border-white/[0.08]">
-            {/* Subtle anisotropic brushed metal sheen */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(255,255,255,0.08),transparent_70%)] pointer-events-none" />
+          {/* Neural AI Substrate plate */}
+          <div className="relative w-full h-full rounded-[47px] bg-[#0c0908] p-5 flex flex-col justify-between overflow-hidden border border-[#ff8539]/25">
+            {/* Subtle neural synaptic sheen */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(255,133,57,0.15),transparent_70%)] pointer-events-none" />
 
-            {/* Apple-style Triple Camera Island Plateau */}
-            <div className="relative w-28 h-28 rounded-3xl bg-[#161820] border border-white/[0.12] p-2.5 shadow-xl flex flex-wrap gap-2 items-center justify-center">
-              {/* Camera Lens 1 */}
-              <div className="w-10 h-10 rounded-full bg-[#0a0c10] border-2 border-[#2b2e3b] shadow-inner flex items-center justify-center relative">
-                <span className="w-4 h-4 rounded-full bg-[#050608] border border-sky-900/60" />
-                <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full bg-white/40" />
+            {/* Dual AI Neural Core Plateau */}
+            <div className="relative w-full p-3 rounded-2xl bg-black/75 border border-[#ff8539]/25 space-y-2">
+              <div className="flex items-center justify-between text-[8px] font-mono text-[#ff8539]">
+                <span className="font-bold">MERCURY-DECIDE</span>
+                <span className="text-emerald-400 font-bold">&lt; 350MS RCA</span>
               </div>
-              {/* Camera Lens 2 */}
-              <div className="w-10 h-10 rounded-full bg-[#0a0c10] border-2 border-[#2b2e3b] shadow-inner flex items-center justify-center relative">
-                <span className="w-4 h-4 rounded-full bg-[#050608] border border-sky-900/60" />
-                <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full bg-white/40" />
+              <div className="flex items-center justify-between text-[8px] font-mono text-[#ffedd6]">
+                <span>LFM-2.5 DEEP AUDIT</span>
+                <span className="text-[#ff8539]">BYOK KEY READY</span>
               </div>
-              {/* Camera Lens 3 */}
-              <div className="w-10 h-10 rounded-full bg-[#0a0c10] border-2 border-[#2b2e3b] shadow-inner flex items-center justify-center relative">
-                <span className="w-4 h-4 rounded-full bg-[#050608] border border-sky-900/60" />
-                <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full bg-white/40" />
-              </div>
-              {/* LiDAR sensor dot */}
-              <div className="w-3.5 h-3.5 rounded-full bg-black border border-white/10" />
             </div>
 
             {/* Laser Engraved Specs Center */}
             <div className="text-center font-mono space-y-1">
               <div className="text-[9px] text-[#ff8539] font-bold tracking-widest uppercase">
-                APPLE GRADE-5 TITANIUM
+                OPENROUTER DUAL-MODEL REFLEX
               </div>
               <div className="text-[7.5px] text-[#94a3b8] tracking-wider">
-                CNC MILLED CHASSIS // ON-DEVICE EXECUTION
+                FAST-REFLEX INFERENCE // DYNAMIC BYOK KEYS
               </div>
             </div>
 
             {/* Bottom CAD Dimension Caliper */}
-            <div className="flex items-center justify-between font-mono text-[8px] text-[#94a3b8]/70 border-t border-white/[0.08] pt-2">
-              <span>MODEL: A3106</span>
-              <span className="text-[#ffedd6]">Δt = 0.85mm</span>
+            <div className="flex items-center justify-between font-mono text-[8px] text-[#94a3b8]/70 border-t border-[#ff8539]/20 pt-2">
+              <span>ENGINE: MERCURY + LFM</span>
+              <span className="text-[#ffedd6]">LATENCY &lt; 350MS</span>
             </div>
           </div>
         </motion.div>

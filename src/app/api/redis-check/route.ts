@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     const rateLimitResult = await checkRateLimit(ip);
 
     // Increment an activity test counter
-    const visits = await redis.incr("orcathon:demo:counter");
+    const visits = await redis.incr("crashlens:demo:counter");
     const latencyMs = Date.now() - startTime;
 
     return NextResponse.json({

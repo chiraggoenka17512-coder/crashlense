@@ -176,3 +176,62 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 133, 57, 0.4);
 }
+
+/* CAD Hairline Grid Background */
+.bg-cad-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 237, 214, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 237, 214, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Sub-grid micro dots */
+.bg-cad-dots {
+  background-image: radial-gradient(rgba(255, 237, 214, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* CAD Technical Caliper Corner Brackets */
+.cad-corner-tl {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 12px;
+  height: 12px;
+  border-top: 1.5px solid rgba(255, 133, 57, 0.6);
+  border-left: 1.5px solid rgba(255, 133, 57, 0.6);
+  pointer-events: none;
+}
+
+.cad-corner-tr {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 12px;
+  height: 12px;
+  border-top: 1.5px solid rgba(255, 133, 57, 0.6);
+  border-right: 1.5px solid rgba(255, 133, 57, 0.6);
+  pointer-events: none;
+}
+
+.cad-corner-bl {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 12px;
+  height: 12px;
+  border-bottom: 1.5px solid rgba(255, 133, 57, 0.6);
+  border-left: 1.5px solid rgba(255, 133, 57, 0.6);
+  pointer-events: none;
+}
+
+.cad-corner-br {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 12px;
+  height: 12px;
+  border-bottom: 1.5px solid rgba(255, 133, 57, 0.6);
+  border-right: 1.5px solid rgba(255, 133, 57, 0.6);
+  pointer-events: none;
+}

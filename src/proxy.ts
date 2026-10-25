@@ -8,9 +8,12 @@ const hasClerkKeys = Boolean(
 
 const isPublicRoute = createRouteMatcher([
   "/",
-  "/api/health",
-  "/api/db-check",
-  "/api/redis-check",
+  "/radar(.*)",
+  "/dashboard(.*)",
+  "/specs(.*)",
+  "/workbench(.*)",
+  "/telemetry(.*)",
+  "/api/(.*)",
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/models/(.*)",

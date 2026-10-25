@@ -113,7 +113,7 @@ export function TactilePaperDoc({
               <QrCode className="w-6 h-6 text-[#4a4438]" />
             )}
             <span className="text-[6.5px] text-[#8c8270] uppercase tracking-widest mt-1">
-              ORCATHON 2026
+              CRASHLENS 2026
             </span>
           </div>
         </div>

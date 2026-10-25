@@ -11,6 +11,7 @@ import {
   AnimatePresence,
 } from "motion/react";
 import { CuttingMat } from "@/components/oryzo/CuttingMat";
+import { TactileHardwareProps } from "@/components/oryzo/TactileHardwareProps";
 import {
   ExplodedChoreographyLayers,
   STACK_LAYERS,
@@ -21,6 +22,11 @@ import {
   Volume2,
   VolumeX,
   ArrowDown,
+  Sparkles,
+  Cpu,
+  Zap,
+  ArrowRight,
+  ShieldCheck,
 } from "lucide-react";
 
 interface HeroToDeviceChoreographyProps {
@@ -32,28 +38,23 @@ export function HeroToDeviceChoreography({
 }: HeroToDeviceChoreographyProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
-  const [knifeHovered, setKnifeHovered] = useState(false);
-  const [penHovered, setPenHovered] = useState(false);
-  const [pencilHovered, setPencilHovered] = useState(false);
-  const [clipsHovered, setClipsHovered] = useState(false);
-  const [selectedLayerId, setSelectedLayerId] = useState<number>(1);
+  const [selectedLayerId, setSelectedLayerId] = useState<number | null>(null);
   const [hoveredLayerId, setHoveredLayerId] = useState<number | null>(null);
   const activeLayerId = hoveredLayerId ?? selectedLayerId;
   const currentLayer =
     STACK_LAYERS.find((l) => l.id === activeLayerId) || STACK_LAYERS[0];
 
-  // Mouse parallax for subtle studio depth
+  // Mouse parallax for subtle studio depth & interactive hover physics
   const mouseX = useSpring(0, { stiffness: 45, damping: 25 });
   const mouseY = useSpring(0, { stiffness: 45, damping: 25 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const xNorm = (e.clientX - rect.left) / rect.width - 0.5;
-      const yNorm = (e.clientY - rect.top) / rect.height - 0.5;
-      mouseX.set(xNorm * 8);
-      mouseY.set(yNorm * 8);
+      if (typeof window === "undefined") return;
+      const xNorm = e.clientX / window.innerWidth - 0.5;
+      const yNorm = e.clientY / window.innerHeight - 0.5;
+      mouseX.set(xNorm * 12);
+      mouseY.set(yNorm * 12);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -90,35 +91,41 @@ export function HeroToDeviceChoreography({
     offset: ["start start", "end end"],
   });
 
-  // Silky 120 FPS spring physics smoothing on scroll momentum (cinematic dolly crane feel)
+  // Silky 120 FPS high-precision spring physics smoothing on scroll momentum
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 42,
-    damping: 26,
-    mass: 0.32,
-    restDelta: 0.0001,
+    stiffness: 95,
+    damping: 28,
+    mass: 0.12,
+    restDelta: 0.00001,
   });
 
-  // Scroll-driven active layer synchronization across Frame 4 exploded stage [0.54 ➔ 0.94]
+  // Scroll-driven active layer synchronization across Frame 4 exploded stage
   useMotionValueEvent(smoothProgress, "change", (progress) => {
     if (hoveredLayerId !== null) return;
-    if (progress >= 0.54 && progress < 0.60) {
+    if (progress < 0.54) {
+      // Phase 4A (Pure Explosion): all 6 layers are visible simultaneously in 3D with zero flank text
+      setSelectedLayerId(null);
+    } else if (progress >= 0.54 && progress < 0.58) {
       setSelectedLayerId(1);
-    } else if (progress >= 0.60 && progress < 0.66) {
+    } else if (progress >= 0.58 && progress < 0.62) {
       setSelectedLayerId(2);
-    } else if (progress >= 0.66 && progress < 0.72) {
+    } else if (progress >= 0.62 && progress < 0.66) {
       setSelectedLayerId(3);
-    } else if (progress >= 0.72 && progress < 0.78) {
+    } else if (progress >= 0.66 && progress < 0.70) {
       setSelectedLayerId(4);
-    } else if (progress >= 0.78 && progress < 0.84) {
+    } else if (progress >= 0.70 && progress < 0.74) {
       setSelectedLayerId(5);
-    } else if (progress >= 0.84 && progress <= 0.94) {
+    } else if (progress >= 0.74 && progress < 0.78) {
       setSelectedLayerId(6);
+    } else {
+      // Phase 4C: Reassembly & Powered by AI (progress >= 0.78) -> Uniform unified focus
+      setSelectedLayerId(null);
     }
   });
 
   // =========================================================================
   // CINEMATIC TRANSITIONS:
-  // FRAME 1 (HERO DESK) ➔ FRAME 2 (CENTERED PHONE) ➔ FRAME 3 (LAY FLAT AT BOTTOM) ➔ FRAME 4 (EXPLODED SCREEN)
+  // FRAME 1 (HERO DESK) ➔ FRAME 2 (CENTERED PHONE) ➔ FRAME 3 (LAY FLAT AT BOTTOM) ➔ FRAME 4 (EXPLODED SCREEN) ➔ REASSEMBLY ➔ POWERED BY AI
   // =========================================================================
 
   // 1. Desk background (oak table, green mat, stationery) dissolves to black [0.00, 0.18]
@@ -129,67 +136,80 @@ export function HeroToDeviceChoreography({
   const heroUiOpacity = useTransform(smoothProgress, [0.0, 0.14], [1, 0]);
   const heroUiY = useTransform(smoothProgress, [0.0, 0.14], [0, -45]);
 
-  // 3. Phone Liftoff from bottom peeking dock to center, then moves down & lays flat in Frame 3
-  // Hermite S-curve interpolation for velvety cinematic ease-in, peak velocity, and cushion landing
+  // 3. Phone Liftoff from bottom peeking dock to center, then moves down & lays flat in Frame 3,
+  // then lifts into heroic presentation stance during reassembly and "POWERED BY AI"
   const phoneTranslateY = useTransform(
     smoothProgress,
     [
       0.00, 0.08, 0.12, 0.16, 0.20, 0.24, // Phase 1: liftoff from dock to center
-      0.36,                               // Phase 2: center showcase hold
-      0.40, 0.44, 0.48, 0.52, 0.56,       // Phase 3: Hermite S-curve downward glide
-      1.00                                // Frame 3 & 4: resting flat at 25vh
+      0.28,                               // Phase 2: center showcase hold
+      0.32, 0.36, 0.40,                   // Phase 3: Hermite S-curve downward glide
+      0.76,                               // Phase 4A & 4B: resting flat at 25vh for explosion & inspection
+      0.82, 0.96,                         // Phase 4C: Reassembly & Powered by AI (lifts to 10vh hero stance)
+      1.00                                // Smooth exit glide
     ],
     [
       "34vh", "34vh", "26vh", "15vh", "4vh", "0vh",
       "0vh",
-      "1.5vh", "6.5vh", "15.5vh", "22.5vh", "25vh",
-      "25vh"
+      "2vh", "9vh", "25vh",
+      "25vh",
+      "13vh", "13vh",
+      "13vh"
     ]
   );
 
-  // Decoupled follow-through pitch tilt (starts slightly after descent, cushions into 68deg)
-  const phoneRotateX = useTransform(
+  // Decoupled follow-through pitch tilt
+  // Decoupled follow-through pitch tilt (in numeric degrees)
+  const phoneRotateXDeg = useTransform(
     smoothProgress,
     [
-      0.00, 0.38,                         // Upright through Frame 1 & 2
-      0.41, 0.45, 0.49, 0.53, 0.56,       // Decoupled follow-through pitch tilt
+      0.00, 0.28,                         // Upright through Frame 1 & 2
+      0.32, 0.36, 0.40,                   // Pitch tilt flat into 68deg
+      0.76,                               // Flat through explosion & inspection
+      0.82, 0.96,                         // Phase 4C: Tilts up to 28deg hero presentation angle
       1.00
     ],
     [
-      "0deg", "0deg",
-      "4deg", "18deg", "42deg", "62deg", "68deg",
-      "68deg"
+      0, 0,
+      6, 28, 68,
+      68,
+      28, 28,
+      14
     ]
   );
 
   // Z-depth spatial recession (phone steps back into 3D stage volume as it tilts flat)
   const phoneTranslateZ = useTransform(
     smoothProgress,
-    [0.00, 0.38, 0.44, 0.50, 0.56, 1.00],
-    ["0px", "0px", "-25px", "-55px", "-75px", "-75px"]
+    [0.00, 0.28, 0.34, 0.40, 0.44, 0.84, 0.89, 0.96, 1.00],
+    ["0px", "0px", "-25px", "-55px", "-75px", "-75px", "-20px", "-20px", "0px"]
   );
 
   // Subtle organic roll dynamic for physical weighted feel
   const phoneRotateZ = useTransform(
     smoothProgress,
-    [0.00, 0.40, 0.46, 0.54, 1.00],
-    ["0deg", "0deg", "-1.1deg", "0deg", "0deg"]
+    [0.00, 0.32, 0.38, 0.44, 0.84, 0.89, 0.96, 1.00],
+    ["0deg", "0deg", "-1.1deg", "0deg", "0deg", "-2.5deg", "-2.5deg", "0deg"]
   );
 
-  // Scale expansion to preserve hero presence as phone lays flat
+  // Scale expansion to preserve hero presence
   const phoneScale = useTransform(
     smoothProgress,
     [
       0.00, 0.12, 0.24,
-      0.36,
-      0.46, 0.56,
+      0.28,
+      0.36, 0.44,
+      0.84,
+      0.89, 0.96,
       1.00
     ],
     [
       0.96, 0.97, 1.0,
       1.0,
       1.03, 1.075,
-      1.075
+      1.075,
+      1.12, 1.12,
+      1.02
     ]
   );
 
@@ -199,31 +219,31 @@ export function HeroToDeviceChoreography({
   // 5. Ambient Floating Shadow behind upright phone in Frame 2, fading as it tilts flat
   const frame2ShadowOpacity = useTransform(
     smoothProgress,
-    [0.16, 0.24, 0.36, 0.46],
+    [0.16, 0.24, 0.28, 0.34],
     [0, 1, 1, 0]
   );
 
   // 6. Flat Ground Shadow underneath phone in Frame 3 as it lays flat (expands and softens)
   const flatShadowOpacity = useTransform(
     smoothProgress,
-    [0.44, 0.52, 0.58, 1.00],
-    [0, 0.45, 0.95, 0.95]
+    [0.40, 0.44, 0.50, 0.84, 0.89, 0.96, 1.00],
+    [0, 0.55, 0.95, 0.95, 0.70, 0.70, 0]
   );
   const flatShadowScaleX = useTransform(
     smoothProgress,
-    [0.44, 0.58, 1.00],
+    [0.40, 0.52, 1.00],
     [0.65, 1.28, 1.28]
   );
   const flatShadowScaleY = useTransform(
     smoothProgress,
-    [0.44, 0.58, 1.00],
+    [0.40, 0.52, 1.00],
     [0.35, 0.95, 0.95]
   );
 
   // 7. Dynamic Grazing Light Sheen across Ceramic Shield glass during tilt
   const grazingSheenOpacity = useTransform(
     smoothProgress,
-    [0.45, 0.54, 0.60, 0.70],
+    [0.42, 0.48, 0.54, 0.62],
     [0, 0.35, 0.45, 0.0]
   );
 
@@ -231,100 +251,189 @@ export function HeroToDeviceChoreography({
   const backlightOpacity = useTransform(smoothProgress, [0.12, 0.22], [0, 1]);
 
   // 9. Frame 2 Flanks: App Name (Left) and "Engineered by Hand, Built by AI" (Right)
-  // Fades in for Frame 2 [0.18, 0.24], holds, then glides smoothly outward on exit [0.34, 0.40]
   const frame2SideOpacity = useTransform(
     smoothProgress,
-    [0.18, 0.24, 0.34, 0.40],
+    [0.16, 0.22, 0.26, 0.30],
     [0, 1, 1, 0]
   );
   const frame2LeftX = useTransform(
     smoothProgress,
-    [0.18, 0.24, 0.34, 0.40],
+    [0.16, 0.22, 0.26, 0.30],
     [-40, 0, 0, -65]
   );
   const frame2RightX = useTransform(
     smoothProgress,
-    [0.18, 0.24, 0.34, 0.40],
+    [0.16, 0.22, 0.26, 0.30],
     [40, 0, 0, 65]
   );
 
-  // 10. Frame 2 studio HUD / caliper badge [0.18, 0.24, 0.34, 0.40]
+  // 10. Frame 2 studio HUD / caliper badge [0.16, 0.22, 0.26, 0.30]
   const frame2HudOpacity = useTransform(
     smoothProgress,
-    [0.18, 0.24, 0.34, 0.40],
+    [0.16, 0.22, 0.26, 0.30],
     [0, 1, 1, 0]
   );
   const frame2HudY = useTransform(
     smoothProgress,
-    [0.18, 0.24, 0.34, 0.40],
+    [0.16, 0.22, 0.26, 0.30],
     [15, 0, 0, -18]
   );
 
   // =========================================================================
-  // FRAME 4: THE EXPLODING SCREEN PART (6 FLOATING SLICES + WHAT IT IS & HOW IT IS IMPLEMENTED)
+  // FRAME 4: THE EXPLODING SCREEN -> REASSEMBLY -> POWERED BY AI
   // =========================================================================
 
-  // Continuous scroll-driven separation of the 6 layers [0.52 ➔ 0.76]
+  // Continuous scroll-driven separation of the 6 layers [0.40 ➔ 0.50],
+  // held fully separated [0.50 ➔ 0.76], then smoothly REASSEMBLES [0.76 ➔ 0.82] back to 0.0!
   const explosionProgress = useTransform(
     smoothProgress,
-    [0.52, 0.56, 0.62, 0.70, 0.76, 0.88, 1.00],
-    [0.0, 0.12, 0.45, 0.82, 1.0, 1.0, 1.0]
+    [0.40, 0.44, 0.48, 0.50, 0.76, 0.82, 1.00],
+    [0.0, 0.20, 0.75, 1.0, 1.0, 0.0, 0.0]
   );
 
-  // Frame 4 Left Flank: "WHAT IT IS" (matching user notebook sketch)
+  // Pure Explosion Hold Badge: Appears when all 6 slices are floating in space before inspection begins
+  const explosionHoldBadgeOpacity = useTransform(
+    smoothProgress,
+    [0.48, 0.50, 0.52, 0.54],
+    [0, 1, 1, 0]
+  );
+
+  // Frame 4 Left Flank: "WHAT IT IS" (Hidden during explosion; appears ONLY during layer inspection [0.54 ➔ 0.77])
   const whatItIsOpacity = useTransform(
     smoothProgress,
-    [0.54, 0.62, 0.88, 0.94],
+    [0.53, 0.55, 0.75, 0.77],
     [0, 1, 1, 0]
   );
   const whatItIsX = useTransform(
     smoothProgress,
-    [0.54, 0.62, 0.88, 0.94],
+    [0.53, 0.55, 0.75, 0.77],
     [-45, 0, 0, -55]
   );
 
-  // Frame 4 Right Flank: "HOW IT IS IMPLEMENTED" (matching user notebook sketch)
+  // Frame 4 Right Flank: "HOW IT IS IMPLEMENTED" (Hidden during explosion; appears ONLY during layer inspection [0.54 ➔ 0.77])
   const howItIsOpacity = useTransform(
     smoothProgress,
-    [0.54, 0.62, 0.88, 0.94],
+    [0.53, 0.55, 0.75, 0.77],
     [0, 1, 1, 0]
   );
   const howItIsX = useTransform(
     smoothProgress,
-    [0.54, 0.62, 0.88, 0.94],
+    [0.53, 0.55, 0.75, 0.77],
     [45, 0, 0, 55]
   );
 
-  // Frame 4 Top Caliper HUD
+  // Frame 4 Top Caliper HUD / Stepper (Hidden during explosion; appears ONLY during layer inspection [0.54 ➔ 0.77])
   const frame4HudOpacity = useTransform(
     smoothProgress,
-    [0.54, 0.62, 0.88, 0.94],
+    [0.53, 0.55, 0.75, 0.77],
     [0, 1, 1, 0]
   );
 
-  // Multi-Phase Scroll Cue in Lower Bar
+  // =========================================================================
+  // PHASE 4C: REASSEMBLY ENERGY & "POWERED BY AI" SHOWCASE TRANSFORMS
+  // =========================================================================
+
+  // AI Particle Filaments converging on chassis during reassembly [0.76 ➔ 0.83]
+  const reassemblyFilamentsOpacity = useTransform(
+    smoothProgress,
+    [0.76, 0.78, 0.81, 0.83],
+    [0, 1, 1, 0]
+  );
+
+  // Radial Energy Shockwave Flash when slices snap shut [0.80 ➔ 0.84]
+  const reassemblyFlashOpacity = useTransform(
+    smoothProgress,
+    [0.80, 0.82, 0.84],
+    [0, 0.85, 0]
+  );
+  const reassemblyShockwaveScale = useTransform(
+    smoothProgress,
+    [0.80, 0.84],
+    [0.6, 2.2]
+  );
+
+  // "POWERED BY AI" Opacity & Layout Transforms [0.82 ➔ 0.98]
+  const poweredByAiOpacity = useTransform(
+    smoothProgress,
+    [0.82, 0.85, 0.95, 0.98],
+    [0, 1, 1, 0]
+  );
+  const poweredByAiLeftX = useTransform(
+    smoothProgress,
+    [0.82, 0.85, 0.95, 0.98],
+    [-45, 0, 0, -60]
+  );
+  const poweredByAiRightX = useTransform(
+    smoothProgress,
+    [0.82, 0.85, 0.95, 0.98],
+    [45, 0, 0, 60]
+  );
+  const poweredByAiHudOpacity = useTransform(
+    smoothProgress,
+    [0.82, 0.85, 0.95, 0.98],
+    [0, 1, 1, 0]
+  );
+  const aiGlowOpacity = useTransform(
+    smoothProgress,
+    [0.81, 0.84, 0.95, 0.98],
+    [0, 1, 1, 0]
+  );
+
+  // Interactive 3D hover response for reassembled phone (matching Oryzo "Try to hover" behavior)
+  const phoneInteractiveRotateX = useTransform(
+    [phoneRotateXDeg, mouseY, poweredByAiOpacity],
+    ([rotX, mY, aiOp]: number[]) => {
+      const hoverX = mY * 0.7 * aiOp;
+      return `${rotX + hoverX}deg`;
+    }
+  );
+
+  const phoneInteractiveRotateY = useTransform(
+    [mouseX, poweredByAiOpacity],
+    ([mX, aiOp]: number[]) => {
+      const hoverY = mX * 1.2 * aiOp;
+      return `${hoverY}deg`;
+    }
+  );
+
+  // Multi-Phase Scroll Cues in Lower Bar
   const prompt1Opacity = useTransform(smoothProgress, [0.0, 0.16], [1, 0]);
   const prompt2Opacity = useTransform(
     smoothProgress,
-    [0.18, 0.24, 0.34, 0.40],
+    [0.18, 0.24, 0.26, 0.28],
     [0, 1, 1, 0]
   );
   const prompt3Opacity = useTransform(
     smoothProgress,
-    [0.40, 0.46, 0.52, 0.56],
+    [0.30, 0.35, 0.38, 0.42],
+    [0, 1, 1, 0]
+  );
+  const promptExplodedHoldOpacity = useTransform(
+    smoothProgress,
+    [0.48, 0.50, 0.52, 0.54],
     [0, 1, 1, 0]
   );
   const prompt4Opacity = useTransform(
     smoothProgress,
-    [0.56, 0.64, 0.84, 0.89],
+    [0.54, 0.57, 0.75, 0.77],
     [0, 1, 1, 0]
   );
-  const prompt5Opacity = useTransform(smoothProgress, [0.91, 0.97], [0, 1]);
+  const promptReassembleOpacity = useTransform(
+    smoothProgress,
+    [0.77, 0.79, 0.81, 0.83],
+    [0, 1, 1, 0]
+  );
+  const promptPoweredByAiOpacity = useTransform(
+    smoothProgress,
+    [0.83, 0.86, 0.94, 0.97],
+    [0, 1, 1, 0]
+  );
+  const prompt5Opacity = useTransform(smoothProgress, [0.96, 0.99], [0, 1]);
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[640vh] bg-[#07080a] select-none"
+      className="relative w-full h-[840vh] bg-[#07080a] select-none"
     >
       {/* STICKY FULL-SCREEN VIEWPORT LOCK (Seamless zero border transition) */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
@@ -369,139 +478,11 @@ export function HeroToDeviceChoreography({
             </motion.div>
           </div>
 
-          {/* Tactile Props with Hover Physics */}
-          <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
-            {/* Paper Clips */}
-            <motion.div
-              onMouseEnter={() => {
-                playTactileClick(1500, 0.03);
-                setClipsHovered(true);
-              }}
-              onMouseLeave={() => setClipsHovered(false)}
-              animate={{
-                rotate: clipsHovered ? -12 : -8,
-                scale: clipsHovered ? 1.08 : 1,
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              className="absolute left-6 sm:left-14 top-28 sm:top-36 w-20 sm:w-28 h-12 sm:h-16 pointer-events-auto cursor-pointer"
-              style={{
-                filter:
-                  "drop-shadow(0 14px 24px rgba(0,0,0,0.75)) drop-shadow(0 2px 5px rgba(0,0,0,0.5))",
-              }}
-              title="Silver Paper Clips"
-            >
-              <Image
-                src="/images/paper_clips_cozy.png"
-                alt="Paper Clips"
-                width={268}
-                height={178}
-                className="w-full h-full object-contain"
-              />
-            </motion.div>
-
-            {/* Eraser */}
-            <div
-              className="absolute left-10 sm:left-24 bottom-32 sm:bottom-40 w-16 sm:w-24 h-12 sm:h-16 pointer-events-auto cursor-pointer"
-              style={{
-                filter:
-                  "drop-shadow(0 12px 20px rgba(0,0,0,0.7)) drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
-              }}
-              title="Koh-I-Noor Eraser"
-            >
-              <Image
-                src="/images/eraser_block_cozy.png"
-                alt="Eraser"
-                width={274}
-                height={156}
-                className="w-full h-full object-contain"
-              />
-            </div>
-
-            {/* Wooden Pencil */}
-            <motion.div
-              onMouseEnter={() => {
-                playTactileClick(700, 0.04);
-                setPencilHovered(true);
-              }}
-              onMouseLeave={() => setPencilHovered(false)}
-              animate={{
-                rotate: pencilHovered ? -26 : -29,
-                x: pencilHovered ? 4 : 0,
-              }}
-              transition={{ type: "spring", stiffness: 350, damping: 22 }}
-              className="absolute left-2 sm:left-8 bottom-16 sm:bottom-20 w-44 sm:w-60 h-10 sm:h-14 pointer-events-auto cursor-pointer hidden sm:block"
-              style={{
-                filter:
-                  "drop-shadow(0 16px 28px rgba(0,0,0,0.8)) drop-shadow(0 3px 6px rgba(0,0,0,0.5))",
-              }}
-              title="Cedar Drafting Pencil"
-            >
-              <Image
-                src="/images/wood_pencil_cozy.png"
-                alt="Wood Pencil"
-                width={612}
-                height={142}
-                className="w-full h-full object-contain"
-              />
-            </motion.div>
-
-            {/* Drafting Pen */}
-            <motion.div
-              onMouseEnter={() => {
-                playTactileClick(900, 0.04);
-                setPenHovered(true);
-              }}
-              onMouseLeave={() => setPenHovered(false)}
-              animate={{
-                rotate: penHovered ? -22 : -25,
-                y: penHovered ? -3 : 0,
-              }}
-              transition={{ type: "spring", stiffness: 350, damping: 22 }}
-              className="absolute right-4 sm:right-12 top-28 sm:top-36 w-44 sm:w-64 h-12 sm:h-16 pointer-events-auto cursor-pointer"
-              style={{
-                filter:
-                  "drop-shadow(0 14px 26px rgba(0,0,0,0.75)) drop-shadow(0 2px 5px rgba(0,0,0,0.5))",
-              }}
-              title="Japanese Drafting Pen"
-            >
-              <Image
-                src="/images/drafting_pen_cozy.png"
-                alt="Drafting Pen"
-                width={640}
-                height={160}
-                className="w-full h-full object-contain"
-              />
-            </motion.div>
-
-            {/* Olfa Utility Knife */}
-            <motion.div
-              onMouseEnter={() => {
-                playTactileClick(1100, 0.05);
-                setKnifeHovered(true);
-              }}
-              onMouseLeave={() => setKnifeHovered(false)}
-              animate={{
-                rotate: knifeHovered ? 38 : 34,
-                scale: knifeHovered ? 1.05 : 1,
-                x: knifeHovered ? -4 : 0,
-              }}
-              transition={{ type: "spring", stiffness: 350, damping: 20 }}
-              className="absolute right-4 sm:right-10 lg:right-16 bottom-14 sm:bottom-16 w-40 sm:w-52 lg:w-60 h-22 sm:h-28 pointer-events-auto cursor-pointer hidden sm:block"
-              style={{
-                filter:
-                  "drop-shadow(-12px 22px 32px rgba(0,0,0,0.8)) drop-shadow(-3px 6px 9px rgba(0,0,0,0.5))",
-              }}
-              title="Olfa A-1 Utility Knife"
-            >
-              <Image
-                src="/images/olfa_knife_cozy.png"
-                alt="Olfa Utility Knife"
-                width={844}
-                height={245}
-                className="w-full h-full object-contain"
-              />
-            </motion.div>
-          </div>
+          {/* CrashLens Tactical SRE Hardware Artifacts with Realistic Lighting & Hover Physics */}
+          <TactileHardwareProps
+            playTactileClick={playTactileClick}
+            onDetonateScenario={onTryItNow}
+          />
         </motion.div>
 
         {/* Pitch Black Stage Backdrop with subtle Dot Matrix */}
@@ -559,19 +540,19 @@ export function HeroToDeviceChoreography({
           {/* Bottom-Left Frosted Glass Card */}
           <div className="absolute left-6 sm:left-12 top-[60vh] hidden md:block max-w-[250px] lg:max-w-[280px] p-3.5 sm:p-4 rounded-2xl bg-[#1d1915]/80 backdrop-blur-xl border border-[rgba(255,237,214,0.16)] shadow-[0_20px_45px_rgba(0,0,0,0.7)] text-[#f4efe6]">
             <h3 className="font-[family-name:var(--font-display)] font-black text-xs sm:text-[12.5px] uppercase leading-snug text-[#ffedd6] mb-1.5">
-              BUILT FOR ORCATHON 2026,<br />
-              THE HIGH-STAKES APP ARENA.
+              CRASHLENS // RADAR OS,<br />
+              PREDICTIVE CHAOS SANDBOX.
             </h3>
             <div className="w-full border-b border-dotted border-[rgba(255,237,214,0.25)] my-1.5" />
             <p className="font-mono text-[10px] text-[#94a3b8] leading-relaxed">
-              The world&apos;s most unnecessarily sophisticated web &amp; mobile problem-solving application.
+              Predicting catastrophic distributed microservice cascades 45s before SLAs breach.
             </p>
           </div>
 
           {/* Bottom-Right Editorial Copy & Live Widget */}
           <div className="absolute right-6 sm:right-12 top-[60vh] hidden lg:flex flex-col items-end gap-2 max-w-[270px] text-right">
             <p className="font-sans text-[11px] text-[#ffedd6] font-medium leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
-              Designed to ingest, compute, and resolve in sub-15ms. Orcathon makes the most complex problem feel effortless.
+              Sub-350ms root cause diagnosis via System 1 Reflex Inception. Zero panic, pre-failure interception.
             </p>
             <div
               onClick={onTryItNow}
@@ -583,10 +564,10 @@ export function HeroToDeviceChoreography({
               <div className="flex flex-col text-left">
                 <span className="font-mono text-[8px] text-[#ff8539] font-bold tracking-widest uppercase flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                  ORCATHON PLAY
+                  CRASHLENS RADAR
                 </span>
                 <span className="font-[family-name:var(--font-display)] font-bold text-[10.5px] text-[#f4efe6]">
-                  Launch App Playground →
+                  Launch Failure Playground →
                 </span>
               </div>
             </div>
@@ -605,7 +586,7 @@ export function HeroToDeviceChoreography({
             <span>APPARATUS // ON-DEVICE SYSTEM ACTIVE</span>
           </div>
           <div className="font-mono text-[10px] text-[#ffedd6]/70">
-            [ CALIBRATED FOR ORCATHON 2026 ]
+            [ CALIBRATED FOR CRASHLENS 12-NODE TOPOLOGY ]
           </div>
         </motion.div>
 
@@ -619,7 +600,8 @@ export function HeroToDeviceChoreography({
               y: phoneTranslateY,
               z: phoneTranslateZ,
               scale: phoneScale,
-              rotateX: phoneRotateX,
+              rotateX: phoneInteractiveRotateX,
+              rotateY: phoneInteractiveRotateY,
               rotateZ: phoneRotateZ,
               transformStyle: "preserve-3d",
             }}
@@ -662,12 +644,45 @@ export function HeroToDeviceChoreography({
               />
             </motion.div>
 
+            {/* AI Filaments & Synaptic Convergence Rings (Active during reassembly [0.83 -> 0.90]) */}
+            <motion.div
+              style={{ opacity: reassemblyFilamentsOpacity }}
+              className="absolute inset-0 pointer-events-none -z-5 flex items-center justify-center"
+            >
+              {/* Outer Pulsing Particle Ring */}
+              <div className="absolute w-[440px] sm:w-[500px] h-[640px] sm:h-[720px] rounded-[60px] border border-[#ff8539]/40 animate-pulse [animation-duration:2s]" />
+              {/* Concentric Cyan Filament */}
+              <div className="absolute w-[380px] sm:w-[440px] h-[580px] sm:h-[660px] rounded-[56px] border border-[#38bdf8]/35 border-dashed animate-spin [animation-duration:24s]" />
+              {/* Converging Amber Particle Beams */}
+              <div className="absolute -inset-16 bg-[radial-gradient(circle_at_center,rgba(255,133,57,0.18)_0%,rgba(56,189,248,0.08)_45%,transparent_70%)] blur-xl" />
+            </motion.div>
+
+            {/* Reassembly Impact Shockwave Flash (Fires when slices snap shut) */}
+            <motion.div
+              style={{
+                opacity: reassemblyFlashOpacity,
+                scale: reassemblyShockwaveScale,
+              }}
+              className="absolute w-[360px] h-[560px] rounded-[52px] bg-gradient-to-r from-[#ff8539]/30 via-white/40 to-[#38bdf8]/30 blur-md pointer-events-none z-40 transform-gpu"
+            />
+
+            {/* Persistent Ambient AI Halo behind reassembled chassis */}
+            <motion.div
+              style={{ opacity: aiGlowOpacity }}
+              className="absolute -inset-10 rounded-[64px] pointer-events-none -z-10"
+            >
+              <div className="w-full h-full rounded-[64px] bg-[radial-gradient(ellipse_at_center,rgba(255,133,57,0.22)_0%,rgba(56,189,248,0.12)_45%,transparent_75%)] blur-2xl" />
+            </motion.div>
+
+
+
             {/* The High-Fidelity 6-Layer Exploded Architecture Phone */}
             <ExplodedChoreographyLayers
               explosionProgress={explosionProgress}
               activeLayerId={activeLayerId}
               onHoverLayer={setHoveredLayerId}
               onOpenPlayground={onTryItNow}
+              aiGlowOpacity={aiGlowOpacity}
               className="pointer-events-auto"
             />
           </motion.div>
@@ -693,7 +708,7 @@ export function HeroToDeviceChoreography({
           </h2>
 
           <p className="font-mono text-xs sm:text-[13px] text-[#ff8539] font-bold tracking-wider uppercase mt-1.5">
-            PROBLEM SOLVER OS
+            PREDICTIVE FAILURE RADAR
           </p>
 
           {/* Caliper Hairline Divider */}
@@ -768,6 +783,21 @@ export function HeroToDeviceChoreography({
         {/* LAYER 6: FRAME 4 SIDE FLANKS ("WHAT IT IS" on LEFT, "HOW IT IS IMPLEMENTED" on RIGHT) */}
         {/* ========================================================================= */}
 
+        {/* PURE EXPLOSION PHASE CALLOUT: Appears when all 6 slices are floating in 3D before inspection */}
+        <motion.div
+          style={{ opacity: explosionHoldBadgeOpacity }}
+          className="absolute top-22 sm:top-24 left-1/2 -translate-x-1/2 z-30 pointer-events-none flex flex-col items-center text-center px-4"
+        >
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#0d0f16]/90 border border-amber-500/35 backdrop-blur-md shadow-[0_12px_32px_rgba(0,0,0,0.85)] font-mono text-[11px] sm:text-xs text-[#ffedd6]">
+            <span className="w-2 h-2 rounded-full bg-[#ff8539] animate-ping" />
+            <span className="font-bold text-[#ff8539]">STAGE 02 //</span>
+            <span>6 RUNTIME SLICES DECONSTRUCTED</span>
+          </div>
+          <span className="mt-2 font-mono text-[9px] text-[#94a3b8] uppercase tracking-[0.2em]">
+            SCROLL TO INSPECT EACH LAYER ONE BY ONE ↓
+          </span>
+        </motion.div>
+
         {/* Top Caliper HUD for Frame 4 (Desktop only) */}
         <motion.div
           style={{ opacity: frame4HudOpacity }}
@@ -781,7 +811,7 @@ export function HeroToDeviceChoreography({
           {/* Interactive 6-Layer Stepper */}
           <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#0d0f16]/90 border border-white/10 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.8)]">
             {STACK_LAYERS.map((layer) => {
-              const isSelected = currentLayer.id === layer.id;
+              const isSelected = (hoveredLayerId ?? selectedLayerId) === layer.id;
               return (
                 <button
                   key={layer.id}
@@ -1004,6 +1034,98 @@ export function HeroToDeviceChoreography({
         </motion.div>
 
         {/* ========================================================================= */}
+        {/* LAYER 6B: PHASE 4C - "POWERED BY AI*" (1:1 ORYZO DESIGN & CRAFTSMANSHIP) */}
+        {/* ========================================================================= */}
+
+        {/* 1. TOP HEADER: "Powered by AI*" with CRASHLENS-1 nested underneath */}
+        <motion.div
+          style={{ opacity: poweredByAiOpacity }}
+          className="absolute left-1/2 -translate-x-1/2 top-10 sm:top-14 md:top-16 text-center z-30 pointer-events-none select-none hidden md:block"
+        >
+          <div className="relative inline-block">
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[104px] font-[family-name:var(--font-display)] font-medium text-[#ffedd7] tracking-[-0.018em] uppercase leading-none whitespace-nowrap">
+              Powered by AI<sup className="text-[0.45em] ml-0.5 text-[#ffedd7] align-super">*</sup>
+            </h1>
+            <h4 className="absolute right-1 sm:right-2 -bottom-4 sm:-bottom-5 md:-bottom-6 font-[family-name:var(--font-display)] text-xs sm:text-sm md:text-base lg:text-lg font-bold text-[#dc5000] tracking-wider uppercase">
+              CRASHLENS-1
+            </h4>
+          </div>
+        </motion.div>
+
+        {/* 2. LEFT FLANK (#ai-pre): "isn’t just monitoring." + body description */}
+        <motion.div
+          style={{ opacity: poweredByAiOpacity, x: poweredByAiLeftX }}
+          className="absolute left-6 sm:left-10 lg:left-16 xl:left-24 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-start max-w-[260px] lg:max-w-[340px] xl:max-w-[380px] pointer-events-none select-none"
+        >
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-[family-name:var(--font-display)] font-medium uppercase text-[#ffedd7] leading-[0.95] tracking-tight mb-4">
+            isn’t just <br />monitoring.
+          </h2>
+          <div className="font-sans text-sm sm:text-base lg:text-lg text-[#ffedd7]/80 font-normal leading-snug space-y-0.5">
+            <span className="block">CrashLens isn’t just monitoring.</span>
+            <span className="block">It’s an autonomous pre-failure</span>
+            <span className="block">distributed interception engine.</span>
+          </div>
+        </motion.div>
+
+        {/* 3. BOTTOM LEFT (#ai-instruction): Hand icon with dashed rule + "Try to hover phone" */}
+        <motion.div
+          style={{ opacity: poweredByAiOpacity }}
+          className="absolute left-6 sm:left-10 lg:left-16 xl:left-24 bottom-16 sm:bottom-20 z-20 hidden md:flex flex-col items-start gap-2 w-36 lg:w-44 pointer-events-none select-none"
+        >
+          <svg viewBox="0 0 32 40" className="w-6 h-8 text-[#ffedd7] opacity-60 mb-1">
+            <path
+              fill="currentColor"
+              d="M6.718 22.615V17.36c-.325.341-.659.696-.986 1.058-1.276 1.407-2.352 2.76-2.775 3.622-.293.602-.263 1.344.017 2.186.271.816.721 1.549 1.03 2.016l5.182 6.817a5.1 5.1 0 0 1 1.04 3.085v2.231a1.375 1.375 0 0 1-2.75 0v-2.231c0-.515-.169-1.012-.48-1.421v-.001l-5.214-6.859-.028-.036-.025-.038c-.34-.513-.97-1.506-1.365-2.696-.393-1.182-.616-2.748.124-4.262v-.002c.616-1.254 1.946-2.867 3.207-4.258a64 64 0 0 1 3.023-3.103V6.902a4.156 4.156 0 0 1 5.711-3.851 4.155 4.155 0 0 1 8.153.86c.466-.175.966-.27 1.483-.27A4.167 4.167 0 0 1 26.23 7.68a4.133 4.133 0 0 1 5.52 3.893v15.933c0 2.3-.866 4.735-3.162 7.469h.001c-.444.53-.681 1.14-.681 1.727v1.673a1.375 1.375 0 1 1-2.75 0v-1.673c0-1.332.533-2.55 1.324-3.493v-.001C28.46 30.854 29 29.024 29 27.506V11.572a1.383 1.383 0 1 0-2.767.008v8.293a1.375 1.375 0 1 1-2.75 0V7.808c0-.782-.635-1.417-1.418-1.417-.82 0-1.474.67-1.474 1.415v10.23a1.375 1.375 0 0 1-2.75 0V4.153a1.406 1.406 0 0 0-2.81 0v11.974a1.375 1.375 0 0 1-2.75 0V6.902l-.007-.142a1.406 1.406 0 0 0-2.806.142v15.713a1.375 1.375 0 0 1-2.75 0"
+            />
+          </svg>
+          <div className="w-full h-[1px] opacity-40 [background:repeating-linear-gradient(90deg,#ffedd7_0_2px,transparent_0_4px)]" />
+          <div className="font-mono text-[10px] text-[#ffedd7]/60 uppercase tracking-widest">
+            Try to hover phone
+          </div>
+        </motion.div>
+
+        {/* 4. RIGHT FLANK (#ai-desc): Witty copy matching Oryzo style */}
+        <motion.div
+          style={{ opacity: poweredByAiOpacity, x: poweredByAiRightX }}
+          className="absolute right-6 sm:right-10 lg:right-16 xl:right-24 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-end text-right max-w-[280px] lg:max-w-[340px] xl:max-w-[380px] pointer-events-none select-none"
+        >
+          <div className="font-[family-name:var(--font-display)] text-xl sm:text-2xl lg:text-3xl uppercase tracking-tight text-[#ffedd7] leading-tight space-y-1">
+            <span className="block text-[#dc5000]">Reflex fills in the gaps.</span>
+            <span className="block">We said sub-350ms.</span>
+            <span className="block text-[#ffedd7]/70">It intercepted cascade.</span>
+          </div>
+        </motion.div>
+
+        {/* 5. BOTTOM RIGHT (#ai-disclaimer-wrapper): Dashed rule + Disclaimer */}
+        <motion.div
+          style={{ opacity: poweredByAiOpacity }}
+          className="absolute right-6 sm:right-10 lg:right-16 xl:right-24 bottom-16 sm:bottom-20 z-20 hidden md:flex flex-col items-end text-right max-w-[280px] pointer-events-none select-none"
+        >
+          <div className="w-32 h-[1px] opacity-40 [background:repeating-linear-gradient(90deg,#ffedd7_0_2px,transparent_0_4px)] mb-2" />
+          <div className="font-mono text-[10px] text-[#ffedd7]/50 uppercase tracking-widest leading-relaxed">
+            * Autonomous Pre-Failure Radar Engine
+          </div>
+        </motion.div>
+
+        {/* 6. MOBILE RESPONSIVE VERSION */}
+        <motion.div
+          style={{ opacity: poweredByAiOpacity }}
+          className="absolute inset-x-4 top-20 z-30 md:hidden flex flex-col items-center pointer-events-none select-none text-center"
+        >
+          <div className="relative inline-block mb-3">
+            <h1 className="text-4xl sm:text-5xl font-[family-name:var(--font-display)] font-medium text-[#ffedd7] tracking-[-0.018em] uppercase leading-none">
+              Powered by AI<sup className="text-[0.45em] ml-0.5 text-[#ffedd7] align-super">*</sup>
+            </h1>
+            <h4 className="font-mono text-xs font-bold text-[#dc5000] tracking-widest uppercase mt-1">
+              CRASHLENS-1
+            </h4>
+          </div>
+          <p className="text-xs text-[#ffedd7]/80 max-w-[280px] leading-relaxed">
+            CrashLens isn’t just monitoring. All 6 deconstructed runtime layers reassemble into an autonomous pre-failure radar.
+          </p>
+        </motion.div>
+
+        {/* ========================================================================= */}
         {/* LAYER 7: BOTTOM CALIPER BAR & HAPTIC CONTROLS (SEAMLESS GRADIENT VIGNETTE) */}
         {/* ========================================================================= */}
         <div className="absolute bottom-0 inset-x-0 z-30 w-full px-6 sm:px-12 pt-16 pb-5 bg-gradient-to-t from-[#07080a] via-[#07080a]/80 via-40% to-transparent border-0 flex items-center justify-between font-mono text-[10px] sm:text-[11px] text-[#94a3b8] pointer-events-none">
@@ -1051,11 +1173,32 @@ export function HeroToDeviceChoreography({
               <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
             </motion.div>
             <motion.div
-              style={{ opacity: prompt4Opacity }}
+              style={{ opacity: promptExplodedHoldOpacity }}
               className="absolute inset-0 flex items-center justify-center gap-2 text-[#ff8539] pointer-events-none whitespace-nowrap"
             >
-              <span>STAGE 02 // 6-LAYER ARCHITECTURE [ EXPLODED ]</span>
+              <span>6 RUNTIME SLICES DECONSTRUCTED · SCROLL TO INSPECT</span>
               <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
+            </motion.div>
+            <motion.div
+              style={{ opacity: prompt4Opacity }}
+              className="absolute inset-0 flex items-center justify-center gap-2 text-[#ffedd6] pointer-events-none whitespace-nowrap"
+            >
+              <span>STAGE 02 // INSPECTING ARCHITECTURE [ 0{currentLayer.id} / 06 ]</span>
+              <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
+            </motion.div>
+            <motion.div
+              style={{ opacity: promptReassembleOpacity }}
+              className="absolute inset-0 flex items-center justify-center gap-2 text-[#ff8539] pointer-events-none whitespace-nowrap"
+            >
+              <span>CONVERGING LAYERS · REASSEMBLING UNIFIED CHASSIS</span>
+              <ArrowDown className="w-3 h-3 text-[#ff8539] animate-bounce" />
+            </motion.div>
+            <motion.div
+              style={{ opacity: promptPoweredByAiOpacity }}
+              className="absolute inset-0 flex items-center justify-center gap-2 text-[#38bdf8] pointer-events-none whitespace-nowrap"
+            >
+              <span>STAGE 02 COMPLETE // POWERED BY ARTIFICIAL INTELLIGENCE</span>
+              <ArrowDown className="w-3 h-3 text-[#38bdf8] animate-bounce" />
             </motion.div>
             <motion.div
               style={{ opacity: prompt5Opacity }}

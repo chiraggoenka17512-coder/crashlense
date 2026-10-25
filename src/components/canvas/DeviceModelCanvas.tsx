@@ -94,7 +94,7 @@ export function DeviceModelCanvas({
     // Header Accent Banner
     ctx.fillStyle = "#f59e0b";
     ctx.font = "bold 16px monospace";
-    ctx.fillText("ORCATHON 2026 // WEAPON-GRADE OS", 44, 110);
+    ctx.fillText("CRASHLENS 2026 // PREDICTIVE FAILURE RADAR", 44, 110);
 
     // Live Telemetry Dot
     ctx.fillStyle = "#10b981";
@@ -449,11 +449,11 @@ export function DeviceModelCanvas({
         const targetFlipAngle = isFlipped ? Math.PI : 0;
         const currentY = rootGroupRef.current.rotation.y;
 
-        // Smooth spring dampening toward target rotation
+        // Smooth spring dampening toward target rotation (snappy 120 FPS feel)
         rootGroupRef.current.rotation.y +=
-          (targetFlipAngle + targetRotationRef.current.y - currentY) * 0.08;
+          (targetFlipAngle + targetRotationRef.current.y - currentY) * 0.14;
         rootGroupRef.current.rotation.x +=
-          (targetRotationRef.current.x - rootGroupRef.current.rotation.x) * 0.08;
+          (targetRotationRef.current.x - rootGroupRef.current.rotation.x) * 0.14;
 
         // Subtle floating idle motion
         rootGroupRef.current.position.y = Math.sin(Date.now() * 0.0015) * 0.03;
