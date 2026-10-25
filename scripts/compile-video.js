@@ -56,12 +56,12 @@ const ffmpegCmd = [
   `-i "${path.join(workDir, 'audio_5.webm')}"`,
   '-filter_complex "' +
     '[0:v]setpts=1.85*PTS,fps=30,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,format=yuv420p[v];' +
-    '[1:a]adelay=0|0[a1];' +
-    '[2:a]adelay=11000|11000[a2];' +
-    '[3:a]adelay=20300|20300[a3];' +
-    '[4:a]adelay=28600|28600[a4];' +
-    '[5:a]adelay=35300|35300[a5];' +
-    '[a1][a2][a3][a4][a5]amix=inputs=5:duration=longest:dropout_transition=2[aout]"',
+    '[1:a]adelay=0|0,volume=1.8[a1];' +
+    '[2:a]adelay=11000|11000,volume=1.8[a2];' +
+    '[3:a]adelay=20300|20300,volume=1.8[a3];' +
+    '[4:a]adelay=28600|28600,volume=1.8[a4];' +
+    '[5:a]adelay=35300|35300,volume=1.8[a5];' +
+    '[a1][a2][a3][a4][a5]amix=inputs=5:duration=longest:dropout_transition=2:normalize=0,volume=1.5,alimiter=limit=0.95[aout]"',
   '-map "[v]"',
   '-map "[aout]"',
   '-c:v libx264 -preset fast -crf 19',
